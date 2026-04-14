@@ -452,7 +452,7 @@ body {
 @media (max-width: 900px) {
   .play-section {
     min-height: auto;
-    padding: 10vh 0 45vh;
+    padding: 10vh 0 45vh;''
   }
   .play-section::before {
     background-position: bottom center;
