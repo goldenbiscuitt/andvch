@@ -89,6 +89,15 @@ const observer = new IntersectionObserver((entries, observer) => {
       // Add a slight delay based on the DOM order if they appear together
       entry.target.style.opacity = '1';
       entry.target.style.transform = 'translateY(0)';
+      
+      // Clean up transform/transition after animation to remove stacking context trap
+      setTimeout(() => {
+        if (entry.target.style) {
+          entry.target.style.transform = 'none';
+          entry.target.style.transition = 'none';
+        }
+      }, 1000);
+      
       observer.unobserve(entry.target);
     }
   });
@@ -165,6 +174,14 @@ document.querySelectorAll('.interaction-card, .magnetic-link').forEach(card => {
     if (customCursor) {
       customCursor.classList.add('card-mode');
       customCursor.classList.add('transitioning');
+      
+      // Special case for Explore button
+      const btnText = card.querySelector('.btn-text')?.textContent.trim().toLowerCase();
+      console.log('Hovering card, btn text:', btnText);
+      if (btnText === 'explore') {
+        customCursor.classList.add('explore-hover');
+      }
+
       clearTimeout(cursorTransitionTimeout);
 
       cursorTransitionTimeout = setTimeout(() => {
@@ -224,6 +241,7 @@ document.querySelectorAll('.interaction-card, .magnetic-link').forEach(card => {
     if (customCursor) {
       // Revert cursor to circle
       customCursor.classList.remove('card-mode');
+      customCursor.classList.remove('explore-hover');
       customCursor.classList.add('transitioning');
 
       clearTimeout(cursorTransitionTimeout);
@@ -401,3 +419,4 @@ if (writeExpandBtn && writeExtraList) {
     }
   });
 }
+
