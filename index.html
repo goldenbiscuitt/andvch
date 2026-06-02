@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Arian Dave | Developer & Designer</title>
     <meta name="description"
-      content="Arian Dave - Software engineer working at BMPI creating emotional experiences at the intersection of art, design, and AI." />
+      content="Arian Dave - Software engineer at BMPI creating emotional experiences at the intersection of art, design, and AI." />
+    <link rel="icon" type="image/png" href="assets/img/favicon.png" />
     <!-- Preconnect to Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +19,74 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   </head>
 
-  <body>
+  <body class="splash-active">
+    <script>
+      (function () {
+        var isReload = performance.getEntriesByType("navigation")[0]?.type === 'reload';
+        var isHardRefresh = sessionStorage.getItem('hard_refresh_triggered') === 'true';
+        if (isReload && !isHardRefresh) {
+          document.body.classList.remove('splash-active');
+          document.body.classList.add('splash-revealed');
+          var style = document.createElement('style');
+          style.innerHTML = '#splash-screen { display: none !important; }';
+          document.head.appendChild(style);
+          window.scrollTo(0, 0);
+        }
+      })();
+    </script>
+    <!-- Splash Screen -->
+    <div class="splash-screen" id="splash-screen">
+      <div class="splash-logo-container">
+  
+        <div class="logo-guides">
+          <div class="guide-x"></div>
+          <div class="guide-y"></div>
+          <div class="guide-box"></div>
+        </div>
+  
+        <svg id="SplashLogo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 861.64 538.66" class="splash-logo">
+          <defs>
+            <style>
+              .cls-1 {
+                fill: #fff;
+              }
+  
+              .cls-1,
+              .cls-2 {
+                fill-rule: evenodd;
+              }
+  
+              .cls-2 {
+                fill: #f2633a;
+              }
+            </style>
+          </defs>
+  
+          <path class="cls-2 logo-letter"
+            d="M87.06,261.02l53.49-179.25,53.86,179.25h87.06L193.68.43h-105.88L0,261.02h87.06Z" />
+  
+          <path class="cls-1 logo-letter"
+            d="M543.91,0h-81.87v133.5L375.39,0h-81.87v261.09h81.87v-131.28l86.66,131.28h81.87V0Z" />
+  
+          <path class="cls-2 logo-circle"
+            d="M831.3,200.17c16.75,0,30.33,13.58,30.33,30.33s-13.58,30.33-30.33,30.33-30.33-13.58-30.33-30.33,13.58-30.33,30.33-30.33Z" />
+  
+          <path class="cls-1 logo-letter"
+            d="M665.31.34h-108.78v261.09h108.78c27.29,0,51.19-5.72,71.72-17.15,20.52-11.43,36.32-27.1,47.39-47.02,11.06-19.91,16.59-42.28,16.59-67.12s-5.53-47.44-16.59-67.12c-11.06-19.67-26.86-35.03-47.39-46.1C716.51,5.87,692.6.34,665.31.34h0ZM657.94,188.42h-19.54v-116.53h19.54c18.44,0,33.06,5.04,43.88,15.12,10.82,10.08,16.23,24.47,16.23,43.15s-5.41,33.07-16.23,43.15c-10.82,10.08-25.44,15.12-43.88,15.12h0Z" />
+  
+          <path class="cls-1 logo-letter"
+            d="M289.24,273.1l-53.47,179.59-53.84-179.59h-87.03l87.76,261.09h105.83l87.76-261.09h-87.03Z" />
+  
+          <path class="cls-1 logo-letter"
+            d="M351.84,405.9c0,25.81,5.22,48.8,15.67,68.96,10.45,20.16,25.38,35.83,44.8,47.02,19.42,11.19,42.28,16.78,68.59,16.78,22.61,0,42.83-4.24,60.66-12.72,17.82-8.48,32.32-20.47,43.51-35.96,11.18-15.49,18.62-33.56,22.31-54.21h-86.29c-3.94,8.61-9.53,15.3-16.78,20.1-7.25,4.79-15.55,7.19-24.89,7.19-13.77,0-24.65-5.16-32.64-15.49-7.99-10.33-11.98-24.21-11.98-41.67s3.99-31.35,11.98-41.67c7.99-10.33,18.86-15.49,32.64-15.49,9.34,0,17.64,2.4,24.89,7.19,7.25,4.79,12.84,11.5,16.78,20.1h86.29c-3.69-20.65-11.13-38.72-22.31-54.21-11.19-15.49-25.69-27.47-43.51-35.96-17.83-8.48-38.05-12.72-60.66-12.72-26.31,0-49.17,5.59-68.59,16.78-19.42,11.19-34.36,26.86-44.8,47.02-10.45,20.16-15.67,43.15-15.67,68.96h0Z" />
+  
+          <path class="cls-1 logo-letter"
+            d="M779.77,273.35v94.04h-77.81v-94.04h-81.87v261.09h81.87v-101.78h77.81v101.78h81.86v-261.09h-81.86Z" />
+        </svg>
+  
+      </div>
+    </div>
+
     <!-- Vertical Background Grid Lines -->
     <div class="grid-lines" aria-hidden="true">
       <div class="grid-col">
@@ -48,6 +116,7 @@
     </div>
 
     <!-- Message Session Overlay -->
+    <div class="message-overlay-bg" id="message-overlay-bg"></div>
     <div class="message-overlay" id="message-overlay">
       <div class="message-container">
         <textarea id="message-input" class="message-input" placeholder="Type your message..."></textarea>
@@ -68,8 +137,8 @@
             Arian.
           </h1>
           <p class="hero-subtitle">
-            I'm a software engineer working at BMPI. My passion is to create emotional experiences
-            at the intersection of art, design, and AI.
+            I'm an IT Specialist at BMPI. My main work is as a system administration, And My passion is to create emotional
+            experiences at the intersection of art, design, and AI.
           </p>
           <div class="hero-actions" id="hero-actions">
             <a href="#contact" class="say-hi-btn magnetic-link" id="hero-say-hi">
@@ -84,79 +153,100 @@
         <div class="project-grid">
           <!-- Row 1 -->
           <!-- Item 1: Wish 107.5 Concept -->
-          <div class="dense-card c-wish span-2c span-1r">
+          <div class="dense-card c-wish span-2c span-1r" data-project-id="wish">
             <div class="wish-content">
-              <div class="wish-live-badge">
-                <span class="live-dot"></span>
-                <span class="live-text">LIVE</span>
-              </div>
               <img
                 src="https://cdn.prod.website-files.com/66e1987f36e4944240bc5ab8/6701637328a69477c92c2652_Wish-Logo.svg"
-                alt="Wish 107.5 Logo" class="wish-logo-img">
+                alt="Wish 107.5 Logo" class="wish-logo-img" draggable="false">
             </div>
           </div>
           <!-- Item 2: orb -->
-          <div class="dense-card c-orb span-1c span-1r"></div>
-          <!-- Item 3: Medium -->
-          <div class="dense-card c-medium span-1c span-1r">
-            <span>Medium</span>
-            <span>12 DP</span>
-            <div class="med-line"></div>
+          <div class="dense-card c-orb span-1c span-1r non-clickable" data-project-id="orb">
+            <img src="assets/img/earth_wallpaper.jpg" alt="Orb Experiments" class="c-orb-img" draggable="false">
+          </div>
+          <!-- Item 3: Medium (Attribution: Originally by Adrian Zumbrunnen https://azumbrunnen.me/) -->
+          <div class="dense-card c-medium span-1c span-1r non-clickable no-hover" data-project-id="medium">
+            <img src="assets/img/item_3.png" alt="Medium 12 DP Grid" class="c-medium-img" draggable="false">
           </div>
           <!-- Item 4: e -->
-          <div class="dense-card c-e span-1c span-1r">e</div>
-          <!-- Item 5: Pink fabric -->
-          <div class="dense-card c-pink span-1c span-2r"></div>
+          <div class="dense-card c-e span-1c span-1r non-clickable no-hover" data-project-id="e">
+            <video src="assets/img/apple.webm" autoplay loop muted playsinline class="e-video" draggable="false"></video>
+          </div>
+          <!-- Item 5: Favorite Wallpaper -->
+          <div class="dense-card c-wallpaper span-1c span-2r" data-project-id="wallpaper">
+            <img src="assets/img/fav_wallpaper.png" alt="Favorite Wallpaper" class="wallpaper-img" draggable="false">
+          </div>
 
           <!-- Row 2 -->
-          <!-- Item 6: Shoe -->
-          <div class="dense-card c-shoe span-1c span-2r">
-            <div class="shoe-dot"></div>
+          <!-- Item 6: Map Project -->
+          <div class="dense-card c-directory-app span-1c span-2r" data-project-id="directory-app">
+            <img src="assets/img/directory-app/item_6_cover.png" alt="Map Project" class="directory-app-img" draggable="false">
           </div>
-          <!-- Item 7: Car -->
-          <div class="dense-card c-car span-1c span-1r">
-            <div class="neon-car" style="transform: scale(0.6);">
-              <div class="car-body"></div>
-              <div class="car-wheel w1"></div>
-              <div class="car-wheel w2"></div>
-            </div>
+          <!-- Item 7: Car (Attribution: Originally by Adrian Zumbrunnen https://azumbrunnen.me/) -->
+          <div class="dense-card c-car span-1c span-1r non-clickable" data-project-id="car">
+            <video src="assets/img/directory-app/time_experiment.webm" autoplay loop muted playsinline class="car-video"
+              draggable="false"></video>
           </div>
           <!-- Item 8: Dark Gradient -->
-          <div class="dense-card c-grad span-2c span-2r"></div>
+          <div class="dense-card c-grad span-2c span-2r non-clickable no-hover" data-project-id="grad">
+            <img src="assets/img/main_logo.jpg" alt="AND. VCH Logo" class="grad-logo-img" draggable="false">
+          </div>
           <!-- Item 9: Voice -->
-          <div class="dense-card c-voice span-1c span-1r">
-            <div class="voice-text">Hi. how can I help?</div>
-            <div class="voice-line"></div>
+          <div class="dense-card c-voice span-1c span-1r" data-project-id="voice">
+            <img src="assets/img/pinassalin/pinassalin_logo.png" alt="FSL Translator" class="c-voice-img" draggable="false">
           </div>
 
           <!-- Row 3 -->
-          <!-- Item 10: G -->
-          <div class="dense-card c-g span-1c span-1r">G</div>
-          <!-- Item 11: Ambient -->
-          <div class="dense-card c-ambient span-1c span-1r">Ambient</div>
-          <!-- Item 12: Yellow Box -->
-          <div class="dense-card c-yellow span-1c span-1r">
-            <div class="yellow-outline"></div>
-            <div class="pink-dot"></div>
+          <!-- Item 10: G (Attribution: Originally by Adrian Zumbrunnen https://azumbrunnen.me/) -->
+          <div class="dense-card c-g span-1c span-1r non-clickable no-hover" data-project-id="g">
+            <img src="assets/img/googlecloth.jpg" alt="Google Cloth" class="c-g-img" draggable="false">
+          </div>
+          <!-- Item 11: Ambient (Attribution: Originally by Adrian Zumbrunnen https://azumbrunnen.me/) -->
+          <div class="dense-card c-ambient span-1c span-1r non-clickable no-hover" data-project-id="ambient">
+            <video src="assets/img/ambient.c1027bf9.webm" autoplay loop muted playsinline class="ambient-video"
+              draggable="false"></video>
+          </div>
+          <!-- Item 12: Yellow Box (Attribution: Originally by Adrian Zumbrunnen https://azumbrunnen.me/) -->
+          <div class="dense-card c-yellow span-1c span-1r non-clickable no-hover" data-project-id="yellow">
+            <img src="assets/img/one.png" alt="Yellow Box Study" class="c-yellow-img" draggable="false">
           </div>
 
           <!-- Row 4 -->
-          <!-- Item 13: M -->
-          <div class="dense-card c-m span-1c span-1r">M</div>
-          <!-- Item 14: 32 -->
-          <div class="dense-card c-32 span-1c span-1r">32</div>
-          <!-- Item 15: Watch -->
-          <div class="dense-card c-watch span-2c span-1r">
-            <div class="watch-face">
-              <div class="watch-hand"></div>
-              <div class="watch-dot"></div>
-            </div>
+          <!-- Item 13: M (Attribution: Originally by Adrian Zumbrunnen https://azumbrunnen.me/) -->
+          <div class="dense-card c-m span-1c span-1r non-clickable" data-project-id="m">
+            <video src="assets/img/mindful_2.webm" autoplay loop muted playsinline class="m-video" draggable="false"></video>
           </div>
+          <!-- Item 14: 32 -->
+          <div class="dense-card c-32 span-1c span-1r non-clickable no-hover" data-project-id="32">
+            <img src="assets/img/23.png" alt="23" class="c-32-img" draggable="false">
+          </div>
+          
           <!-- Item 16: Green Aurora -->
-          <div class="dense-card c-green span-1c span-1r"></div>
-          <!-- Item 17: Smart Display -->
-          <div class="dense-card c-smart span-1c span-1r">
-            <div class="smart-screen"></div>
+          <div class="dense-card c-green span-1c span-1r non-clickable" data-project-id="green">
+            <video src="assets/img/watch.webm" autoplay loop muted playsinline class="green-video" draggable="false"></video>
+          </div>
+          <!-- Item 15: Watch -->
+          <div class="dense-card c-watch span-2c span-1r non-clickable" data-project-id="watch">
+            <img src="assets/img/AI_Personal_Contextualization.jpg" alt="AI Personal Contextualization" class="watch-img"
+              draggable="false">
+          </div>
+          <!-- Item 17: PesoOS -->
+          <div class="dense-card c-smart span-1c span-1r non-clickable" data-project-id="smart">
+            <svg id="LoadingLogo" data-name="Loading Logo" xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 1050 1050"
+              class="pesoos-svg" aria-label="Loading..." draggable="false">
+              <g>
+                <path fill="hsl(var(--primary))" opacity="0.25"
+                  d="M0,475C0,118.75,118.75,0,475,0s475,118.75,475,475-118.75,475-475,475S0,831.25,0,475"
+                  class="animate-wave-reveal origin-center" style="animation-delay: 0.4s;" />
+                <circle fill="hsl(var(--primary))" opacity="0.5" cx="475" cy="475" r="400"
+                  class="animate-wave-reveal origin-center" style="animation-delay: 0.2s;" />
+                <circle fill="hsl(var(--primary))" opacity="0.75" cx="475" cy="475" r="300"
+                  class="animate-wave-reveal origin-center" style="animation-delay: 0s;" />
+                <circle fill="hsl(var(--primary))" cx="475" cy="475" r="200" />
+              </g>
+              <path fill="#fff"
+                d="M335.33,426.51c1.17-12.04,13.22-25.63,25.82-25.63h15.56v-49.97c0-11.49,14.06-24.68,25.5-25.03,37.37,1.19,75.88-1.74,113.12-.06,67.45,3.04,114.36,68.38,95.02,133.46-12.48,41.99-51.12,71.9-95.02,73.77l-81.13-.02v66.44c0,12.6-13.59,24.64-25.63,25.81h-6.23c-3.11-.64-6.01-1.32-8.92-2.61-8.13-3.61-16.71-13.97-16.71-23.19v-66.44h-15.56c-9.45,0-20.08-9-23.57-17.44-1.1-2.67-1.61-5.39-2.25-8.18v-6.22c.64-3.11,1.32-6.01,2.62-8.92,3.61-8.12,14-16.71,23.2-16.71h15.56v-17.21h-15.56c-9.45,0-20.08-9-23.57-17.44-1.1-2.67-1.61-5.39-2.25-8.18.14-2.01-.19-4.24,0-6.22ZM434.2,475.56l80.39.02c56.46-6.12,56.48-86.16,0-92.28l-80.39.02v17.57h79.65c2.18,0,6.99,1.68,9.1,2.61,22.21,9.87,22.21,42.37,0,52.24-2.11.94-6.92,2.61-9.1,2.61h-79.65v17.21Z" />
+            </svg>
           </div>
         </div>
       </section>
@@ -173,25 +263,32 @@
             </h1>
             <div class="card-grid">
               <div class="card-container">
-                <a href="#" class="interaction-card">
+                <a href="#" class="interaction-card write-card">
                   <div class="card-icon-wrapper">
-                    <div class="card-icon">📝</div>
+                    <div class="card-icon">
+                      <img src="assets/img/card_icon_1.png" alt="Designing for AI Icon" class="card-icon-img" draggable="false">
+                    </div>
                   </div>
                 </a>
                 <h1 class="section-description card-caption">Designing for AI</h1>
               </div>
               <div class="card-container">
-                <a href="#" class="interaction-card">
+                <a href="#" class="interaction-card write-card">
                   <div class="card-icon-wrapper">
-                    <div class="card-icon">🧠</div>
+                    <div class="card-icon">
+                      <img src="assets/img/card_icon_2.png" alt="The Future of Human Interfaces Icon" class="card-icon-img"
+                        draggable="false">
+                    </div>
                   </div>
                 </a>
                 <h1 class="section-description card-caption">The Future of Human Interfaces</h1>
               </div>
               <div class="card-container">
-                <a href="#" class="interaction-card">
+                <a href="#" class="interaction-card write-card">
                   <div class="card-icon-wrapper">
-                    <div class="card-icon">✨</div>
+                    <div class="card-icon">
+                      <img src="assets/img/card_icon_3.png" alt="Minimalism in Web Dev Icon" class="card-icon-img" draggable="false">
+                    </div>
                   </div>
                 </a>
                 <h1 class="section-description card-caption">Minimalism in Web Dev</h1>
@@ -201,29 +298,8 @@
             <!-- Expandable Content -->
             <div class="expand-container">
               <div class="write-extra-list" id="write-extra">
-                <div class="article-item">
-                  <h3 class="article-title">The Power of Unfinished (10 min)</h3>
-                  <p class="article-desc">How to get more done, uplevel your craft</p>
-                </div>
-                <div class="article-item">
-                  <h3 class="article-title">Framer is dead (8 min)</h3>
-                  <p class="article-desc">A love letter to my design tool of choice</p>
-                </div>
-                <div class="article-item">
-                  <h3 class="article-title">Meaningful motion in design (10 min)</h3>
-                  <p class="article-desc">The small details that make up great interfaces</p>
-                </div>
-                <div class="article-item">
-                  <h3 class="article-title">The loss of micro-privacy (18 min)</h3>
-                  <p class="article-desc">How small design changes re-wrote human interaction</p>
-                </div>
-                <div class="article-item">
-                  <h3 class="article-title">Via Negativa (18 min)</h3>
-                  <p class="article-desc">Design through elimination</p>
-                </div>
-                <div class="article-item">
-                  <h3 class="article-title">Why small teams win (7 min)</h3>
-                  <p class="article-desc">Scaling meaning before scaling teams</p>
+                <div class="article-item coming-soon-wrapper">
+                  <p class="coming-soon-text">come back soon for updates on publications</p>
                 </div>
               </div>
 
@@ -239,8 +315,8 @@
             <section class="list-section play-section">
               <h2 class="section-title"><b>Play</b></h2>
               <h1 class="section-description play-desc">
-                I’m driven by curiosity, mixing analog and digital media to develop novel visual expressions for wallpapers
-                and my work on AI based systems.
+                I learned from a book, that incorporating "play" tends to give you better perpectives, especially in the
+                creative, and most technical expertise, I am practicing this in all of my projects and my work on AI Based Systems.
               </h1>
               <div class="play-actions">
                 <a href="#explore" class="explore-btn magnetic-link">
@@ -253,17 +329,18 @@
           <section class="list-section">
             <h2 class="section-title"><b>Speak</b></h2>
             <h1 class="section-description">
-              I'm passionate about sharing knowledge and meeting new people. I've had the opportunity to share ideas
-              at various events around the globe.
+              I'm passionate about learning, and sharing these knowledge with new people. I've had the opportunity to share ideas
+              at various events in the Philippines, and hopefully around the globe.
             </h1>
             <div class="speak-grid">
               <!-- Item 1 -->
-              <a href="#" class="speak-item" style="text-decoration: none;">
+              <a href="https://www.facebook.com/share/r/1AtrRm53Ps/" class="speak-item" style="text-decoration: none;" target="_blank"
+                rel="noopener noreferrer">
                 <div class="interaction-card speak-card">
                   <svg viewBox="0 0 24 24" width="24" height="24" stroke="var(--text-secondary)" fill="none"
                     stroke-width="1.2">
                     <rect x="4" y="6" width="16" height="10" rx="1"></rect>
-                    <circle cx="20" cy="16" r="1.5" fill="#305CDE" stroke="none"></circle>
+                    <circle cx="20" cy="16" r="1.5" fill="#ff4d00" stroke="none"></circle>
                   </svg>
                 </div>
                 <div class="speak-text">
@@ -273,68 +350,69 @@
               </a>
 
               <!-- Item 2 -->
-              <a href="#" class="speak-item" style="text-decoration: none;">
+              <a href="https://www.facebook.com/share/p/18yE4QEtR5/" class="speak-item" style="text-decoration: none;" target="_blank"
+                rel="noopener noreferrer">
                 <div class="interaction-card speak-card">
                   <svg viewBox="0 0 24 24" width="24" height="24" stroke="var(--text-secondary)" fill="none"
                     stroke-width="1.2">
                     <path d="M2 12C2 12 7 5 12 5C17 5 22 12 22 12C22 12 17 19 12 19C7 19 2 12 2 12Z"></path>
                     <circle cx="12" cy="12" r="3"></circle>
-                    <circle cx="12" cy="12" r="1.5" fill="#305CDE" stroke="none"></circle>
+                    <circle cx="12" cy="12" r="1.5" fill="#ff4d00" stroke="none"></circle>
                   </svg>
                 </div>
                 <div class="speak-text">
-                  <h3 class="speak-title">Designing for attention</h3>
-                  <p class="speak-desc">Wix Tel-Aviv, UX Salon</p>
+                  <h3 class="speak-title">PinasSalin</h3>
+                  <p class="speak-desc">Shared at IT Philippines</p>
                 </div>
               </a>
 
               <!-- Item 3 -->
-              <a href="#" class="speak-item" style="text-decoration: none;">
+              <a href="https://www.facebook.com/share/p/1D9mnKtUKB/" class="speak-item" style="text-decoration: none;" target="_blank"
+                rel="noopener noreferrer">
                 <div class="interaction-card speak-card">
                   <svg viewBox="0 0 24 24" width="24" height="24" stroke="var(--text-secondary)" fill="none"
                     stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
-                    <polygon points="12 2 22 8 22 16 12 22 2 16 2 8 12 2"></polygon>
-                    <polyline points="2 8 12 14 22 8"></polyline>
-                    <polyline points="12 14 12 22"></polyline>
-                    <circle cx="12" cy="14" r="1.5" fill="#305CDE" stroke="none"></circle>
+                    <polyline points="3.5 7 12 12 18.1 7.7"></polyline>
+                    <circle cx="12" cy="12" r="1.5" fill="#ff4d00" stroke="none"></circle>
                   </svg>
                 </div>
                 <div class="speak-text">
-                  <h3 class="speak-title">Meaningful Motion</h3>
-                  <p class="speak-desc">Amuse, Awwwards, Push</p>
+                  <h3 class="speak-title">Hour of AI</h3>
+                  <p class="speak-desc">AI Ready ASEAN | CBRC | SmartCT</p>
                 </div>
               </a>
 
               <!-- Item 4 -->
-              <a href="#" class="speak-item" style="text-decoration: none;">
+              <a href="https://www.youtube.com/live/9K4TR7aFuJI" class="speak-item" style="text-decoration: none;" target="_blank"
+                rel="noopener noreferrer">
                 <div class="interaction-card speak-card">
                   <svg viewBox="0 0 24 24" width="24" height="24" stroke="var(--text-secondary)" fill="none"
                     stroke-width="1.2">
                     <circle cx="12" cy="6" r="1.5"></circle>
-                    <circle cx="12" cy="12" r="1.5" fill="#305CDE" stroke="none"></circle>
+                    <circle cx="12" cy="12" r="1.5" fill="#ff4d00" stroke="none"></circle>
                     <circle cx="12" cy="18" r="1.5"></circle>
                   </svg>
                 </div>
                 <div class="speak-text">
-                  <h3 class="speak-title">Designing choice</h3>
-                  <p class="speak-desc">Push 16, Amuse, Web Expo</p>
+                  <h3 class="speak-title">AI Literacy</h3>
+                  <p class="speak-desc">UNTV | Serbisyong Bayanihan</p>
                 </div>
               </a>
 
               <!-- Item 5 -->
-              <a href="#" class="speak-item" style="text-decoration: none;">
+              <!-- <a href="#" class="speak-item" style="text-decoration: none;">
                 <div class="interaction-card speak-card">
                   <svg viewBox="0 0 24 24" width="24" height="24" stroke="var(--text-secondary)" fill="none"
                     stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
                     <polyline points="4 22 8 2 12 16 16 6 20 22"></polyline>
-                    <circle cx="20" cy="22" r="1.5" fill="#305CDE" stroke="none"></circle>
+                    <circle cx="20" cy="22" r="1.5" fill="#ff4d00" stroke="none"></circle>
                   </svg>
                 </div>
                 <div class="speak-text">
                   <h3 class="speak-title">Rethinking Content Creation</h3>
                   <p class="speak-desc">Amuse, Awwwards</p>
                 </div>
-              </a>
+              </a> -->
             </div>
           </section>
         </div>
@@ -343,7 +421,7 @@
 
     <footer class="site-footer">
       <div class="footer-left-group">
-        <a href="#" class="back-to-top" aria-label="Back to top">
+        <a href="#" class="back-to-top social-link magnetic-link" aria-label="Back to top">
           <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"
             stroke-linecap="round" stroke-linejoin="round" class="house-icon">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
@@ -352,7 +430,7 @@
         </a>
         <div class="footer-links">
           <a href="https://x.com/andvch" class="social-link magnetic-link" target="_blank"
-            rel="noopener noreferrer">twitter</a>
+            rel="noopener noreferrer">X (twitter)</a>
           <span class="footer-dot">•</span>
           <a href="https://github.com/goldenbiscuitt" class="social-link magnetic-link" target="_blank"
             rel="noopener noreferrer">github</a>

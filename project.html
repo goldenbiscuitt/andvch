@@ -5,19 +5,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Project | Arian Dave</title>
+    <link rel="icon" type="image/png" href="assets/img/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
       rel="stylesheet">
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="project.css" />
     <style>
       /* Project Page Specific Layout */
       .project-header {
         position: fixed;
         top: 0;
         left: 50%;
-        transform: translateX(-50%);
+        transform: translate(-50%, 0);
         width: 100%;
         max-width: 60vw;
         padding: 40px 24px;
@@ -26,6 +28,37 @@
         align-items: center;
         z-index: 100;
         font-family: var(--font-mono);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, max-width 0.3s ease;
+      }
+
+      .project-header.header-hidden {
+        transform: translate(-50%, -100%);
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      @media (max-width: 1200px) {
+        .project-header {
+          max-width: 80vw;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .project-header {
+          max-width: 90vw;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .project-header {
+          max-width: 100%;
+        }
+        .project-info {
+          max-width: 100%;
+        }
+        .project-description {
+          font-size: 1.25rem;
+        }
       }
 
       .header-left .logo-link {
@@ -53,13 +86,17 @@
         opacity: 1;
       }
 
+      html {
+        scroll-behavior: smooth;
+      }
+
       .project-main {
         margin-top: 25vh;
         padding-bottom: 10vh;
       }
 
       .project-info {
-        max-width: 66.66%;
+        max-width: calc(66.666% - 5.33px);
         margin-bottom: 8rem;
       }
 
@@ -68,20 +105,58 @@
         font-size: clamp(2.5rem, 6vw, 5rem);
         margin-bottom: 2rem;
         letter-spacing: -3px;
+        color: white;
       }
 
       .project-description {
-        font-size: 1.5rem;
+        font-family: var(--font-sans);
+        font-size: 28px;
         line-height: 1.6;
-        color: var(--text-secondary);
+        color: var(--text-primary);
       }
 
       .project-visual {
         width: 100%;
-        aspect-ratio: 16 / 9;
-        background: #111;
-        border-radius: 24px;
-        margin-bottom: 10vh;
+        height: 100vh !important;
+        aspect-ratio: auto !important;
+        background: transparent;
+        border-radius: 0;
+        margin-bottom: 0 !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* First project visual element (graphics/images) breaks out of container to be full-width */
+      .project-visual:first-child {
+        width: 100vw !important;
+        position: relative !important;
+        left: 50% !important;
+        right: 50% !important;
+        margin-left: -50vw !important;
+        margin-right: -50vw !important;
+        border-radius: 0 !important;
+      }
+
+      /* Text alignment and width constraints matching grid columns */
+      #project-visuals-container .p-details-box {
+        margin-right: auto !important;
+        margin-left: 0 !important;
+        text-align: left !important;
+      }
+
+      /* Prevent first-child full-width breakout for Wish mocks */
+      #project-visuals-container .p-vis-wish-mocks {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        left: auto !important;
+        right: auto !important;
+        position: relative !important;
+        justify-content: center !important;
       }
     </style>
   </head>
@@ -99,31 +174,33 @@
 
     <header class="project-header">
       <div class="header-left">
-        <a href="index.html" class="logo-link magnetic-link">andvch</a>
+        <a href="index.html" class="logo-link magnetic-link button-padding">andvch.</a>
       </div>
       <div class="header-right">
-        <a href="#" class="nav-link magnetic-link">Previous</a>
-        <a href="#" class="nav-link magnetic-link">Next</a>
+        <a href="#" id="prev-project" class="nav-link magnetic-link button-padding">Previous</a>
+        <a href="#" id="next-project" class="nav-link magnetic-link button-padding">Next</a>
       </div>
     </header>
 
     <main class="project-main">
       <div class="container">
         <div class="project-info">
-          <h1 class="project-title">Future Narratives</h1>
-          <p class="project-description">
+          <h1 class="project-title" id="project-title">Future Narratives</h1>
+          <p class="project-description" id="project-description">
             Exploring the emotional connection between generative systems and human perception through minimal interfaces and intentional motion.
           </p>
         </div>
         
-        <div class="project-visual"></div>
-        <div class="project-visual" style="background: #0a0a0a;"></div>
+        <div id="project-visuals-container">
+          <div class="project-visual"></div>
+          <div class="project-visual" style="background: #0a0a0a;"></div>
+        </div>
       </div>
     </main>
 
     <footer class="site-footer">
       <div class="footer-left-group">
-        <a href="index.html" class="back-to-top" aria-label="Back to home">
+        <a href="index.html" class="back-to-top social-link magnetic-link" aria-label="Back to home">
           <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"
             stroke-linecap="round" stroke-linejoin="round" class="house-icon">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
