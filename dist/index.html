@@ -16,11 +16,25 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
       rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script type="module" crossorigin src="./assets/main-BCuWCW1Y.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/main-BdZlIJ5r.css">
+    <script type="module" crossorigin src="./assets/main-CYd1XDaE.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/main-BhMRfhSt.css">
   </head>
 
   <body class="splash-active">
+    <script>
+      (function () {
+        var isReload = performance.getEntriesByType("navigation")[0]?.type === 'reload';
+        var isHardRefresh = sessionStorage.getItem('hard_refresh_triggered') === 'true';
+        if (isReload && !isHardRefresh) {
+          document.body.classList.remove('splash-active');
+          document.body.classList.add('splash-revealed');
+          var style = document.createElement('style');
+          style.innerHTML = '#splash-screen { display: none !important; }';
+          document.head.appendChild(style);
+          window.scrollTo(0, 0);
+        }
+      })();
+    </script>
     <!-- Splash Screen -->
     <div class="splash-screen" id="splash-screen">
       <div class="splash-logo-container">
@@ -103,6 +117,7 @@
     </div>
 
     <!-- Message Session Overlay -->
+    <div class="message-overlay-bg" id="message-overlay-bg"></div>
     <div class="message-overlay" id="message-overlay">
       <div class="message-container">
         <textarea id="message-input" class="message-input" placeholder="Type your message..."></textarea>
@@ -306,10 +321,7 @@
               </h1>
               <div class="play-actions">
                 <a href="#explore" class="explore-btn magnetic-link">
-                  <div class="explore-btn-content">
-                    <span class="btn-arrow">&rarr;</span> <span class="btn-text">explore</span>
-                  </div>
-                  <div class="explore-btn-overlay-content">Come Back Soon!</div>
+                  <span class="btn-arrow">&rarr;</span> <span class="btn-text">explore</span>
                 </a>
               </div>
             </section>
