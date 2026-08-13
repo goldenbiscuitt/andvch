@@ -30,15 +30,23 @@ function copyAssetsPlugin() {
       if (fs.existsSync(src)) {
         copyDir(src, dest)
       }
+      
+      // Copy .nojekyll to dist root
+      const nojekyllSrc = resolve(__dirname, '.nojekyll')
+      const nojekyllDest = resolve(__dirname, 'dist/.nojekyll')
+      if (fs.existsSync(nojekyllSrc)) {
+        fs.copyFileSync(nojekyllSrc, nojekyllDest)
+      }
     }
   }
 }
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: './', // Use relative paths for all assets
+  base: '/andvch/', // Use absolute repository path for GitHub Pages
   plugins: [copyAssetsPlugin()],
   build: {
+    cssMinify: 'esbuild', // Prevent Lightning CSS from stripping unprefixed backdrop-filter properties
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
