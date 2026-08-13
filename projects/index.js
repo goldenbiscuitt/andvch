@@ -15,6 +15,8 @@ import graphicLayout23 from './item_14_graphic-layout-23.js';
 import green from './item_16_green-aurora.js';
 import watch from './item_15_ai-contextualization.js';
 import smart from './item_17_smart-display.js';
+import andvch from './item_18_andvch.js';
+import typeSpeed from './item_19_type-speed.js';
 
 export const projects = [
   wish,
@@ -33,6 +35,9 @@ export const projects = [
   graphicLayout23,
   green,
   watch,
-  smart
+  smart,
+  andvch,
+  typeSpeed
 ];
+
 

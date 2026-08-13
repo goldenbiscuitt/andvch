@@ -1,4 +1,17 @@
 // import './style.css';
+import { initChromaGame } from './projects/chromaGame.js';
+import { projects } from './projects/index.js';
+import { initTypeSpeedGame } from './projects/typeSpeedGame.js';
+
+// Console Easter Egg for inspect element visitors
+console.log(
+  '%c👀 Woah there, inspect element detective!',
+  'font-family: monospace; font-size: 16px; font-weight: bold; color: #ff5555; background: #1e1e2e; padding: 8px 14px; border-radius: 6px;'
+);
+console.log(
+  '%cWhat are you doing here... you tryna hack me or something? 🤨\nJust kidding! Feel free to look around the code. If you find any cool bugs or have ideas, reach out! 🚀',
+  'font-family: sans-serif; font-size: 13px; color: #a6adc8; line-height: 1.6; padding-top: 4px;'
+);
 
 // Trigger page fade-in on load
 document.body.classList.add('fade-in');
@@ -19,45 +32,139 @@ document.querySelectorAll('a[href="index.html"]').forEach(link => {
   });
 });
 
+
+
 // Hard refresh keydown listener (to persist splash screen trigger)
 window.addEventListener('keydown', (e) => {
   const isR = e.key === 'r' || e.key === 'R' || e.keyCode === 82 || e.code === 'KeyR';
-  if ((e.ctrlKey || e.metaKey) && e.shiftKey && isR) {
-    sessionStorage.setItem('hard_refresh_triggered', 'true');
+  const isF5 = e.key === 'F5' || e.keyCode === 116 || e.code === 'F5';
+  const hasModifier = e.ctrlKey || e.metaKey || e.shiftKey;
+  if (((e.ctrlKey || e.metaKey) && e.shiftKey && isR) || (isF5 && hasModifier)) {
+    try {
+      sessionStorage.setItem('hard_refresh_triggered', 'true');
+      localStorage.removeItem('intro_shown');
+    } catch (err) {}
   }
 });
 
+// Preload all main page assets (images, videos, fonts) during the splash sequence
+function preloadMainPageAssets() {
+  if (document.fonts) {
+    document.fonts.ready.then(() => {
+      // Fonts warm-loaded
+    });
+  }
+
+  // Preload all document images
+  const images = document.querySelectorAll('img[src]');
+  images.forEach(img => {
+    const src = img.getAttribute('src');
+    if (src) {
+      const pImg = new Image();
+      pImg.src = src;
+    }
+  });
+
+  // Preload background images
+  const bgUrls = ['assets/img/play_bg.png'];
+  bgUrls.forEach(url => {
+    const pImg = new Image();
+    pImg.src = url;
+  });
+
+  // Preload and buffer all inline videos
+  const videos = document.querySelectorAll('video[src]');
+  videos.forEach(video => {
+    video.preload = 'auto';
+    video.load();
+  });
+}
+
 // Splash Screen Controller
 const splashScreen = document.getElementById('splash-screen');
-const isReload = performance.getEntriesByType("navigation")[0]?.type === 'reload';
-const isHardRefresh = sessionStorage.getItem('hard_refresh_triggered') === 'true';
+let hasIntroBeenShown = false;
+let isHardRefresh = false;
 
-// Clean up the sessionStorage flag immediately so future soft refreshes are unaffected
-sessionStorage.removeItem('hard_refresh_triggered');
+try {
+  hasIntroBeenShown = localStorage.getItem('intro_shown') === 'true';
+  isHardRefresh = sessionStorage.getItem('hard_refresh_triggered') === 'true';
+  sessionStorage.removeItem('hard_refresh_triggered');
+} catch (err) {}
+
+// Show intro only if it hasn't been shown yet in localStorage OR if a hard refresh was triggered
+const shouldShowIntro = !hasIntroBeenShown || isHardRefresh;
 
 if (splashScreen) {
-  if (isReload && !isHardRefresh) {
-    splashScreen.remove();
-    document.body.classList.add('splash-revealed');
-    document.body.classList.remove('splash-active');
-  } else {
-    // Increased to 3200ms to let the full A-N-D-V-C-H + Circle animation finish!
+  if (shouldShowIntro) {
+    try {
+      localStorage.setItem('intro_shown', 'true');
+    } catch (err) {}
+
+    // Preload all page assets immediately while intro animation plays
+    preloadMainPageAssets();
+
+    // Prevent browser from restoring scroll position on reload
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
+    // Exactly 3.2 seconds (3200ms) animation duration before auto-scrolling down to hero
     setTimeout(() => {
-      // Start sliding up the splash screen
-      splashScreen.classList.add('slide-up');
-
-      // Add revealed class to body to trigger parallax entries for main and footer
-      document.body.classList.add('splash-revealed');
+      // Unlock body scroll and enable main content
       document.body.classList.remove('splash-active');
+      document.body.classList.add('splash-revealed');
 
-      // Remove the splash screen from the DOM after it completes sliding up
-      setTimeout(() => {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Perform real window scroll animation down the document timeline to hero section (100vh)
+      window.scrollTo({
+        top: window.innerHeight,
+        behavior: prefersReducedMotion ? 'auto' : 'smooth'
+      });
+
+      const finalizeSplash = () => {
+        // Remove splash screen element from DOM so user CANNOT scroll back up to it
         splashScreen.style.display = 'none';
         splashScreen.remove();
-      }, 1200); // matches the 1.2s CSS transition duration
-    }, 3200);
+        // Lock hero section as top of page (scrollTop = 0)
+        window.scrollTo(0, 0);
+      };
+
+      if (prefersReducedMotion) {
+        finalizeSplash();
+      } else {
+        let finalized = false;
+        const handleScrollEnd = () => {
+          if (!finalized) {
+            finalized = true;
+            finalizeSplash();
+            window.removeEventListener('scrollend', handleScrollEnd);
+          }
+        };
+        window.addEventListener('scrollend', handleScrollEnd);
+
+        // Fallback timeout in case scrollend is unsupported or delayed
+        setTimeout(() => {
+          if (!finalized) {
+            finalized = true;
+            finalizeSplash();
+            window.removeEventListener('scrollend', handleScrollEnd);
+          }
+        }, 1200);
+      }
+    }, 3200); // 3.2 seconds
+  } else {
+    // Skip intro animation when intro has already been shown and not hard refreshed
+    preloadMainPageAssets();
+    document.body.classList.remove('splash-active');
+    document.body.classList.add('splash-revealed');
+    splashScreen.style.display = 'none';
+    splashScreen.remove();
+    window.scrollTo(0, 0);
   }
 }
+
 
 // Disable right-click globally on all pages
 document.addEventListener('contextmenu', (e) => {
@@ -83,10 +190,6 @@ const greetings = [
 let currentIndex = 0;
 const greetingElement = document.getElementById('greeting');
 let isTransitioning = false;
-
-import { projects } from './projects/index.js';
-
-
 
 const overlayTexts = ["view", "explore", "details", "process", "case"];
 const denseCards = document.querySelectorAll('.dense-card');
@@ -149,6 +252,12 @@ denseCards.forEach(card => {
       overlay.className = 'card-overlay';
       overlay.innerHTML = `<span class="overlay-text" style="text-transform: none;">mindful editor fork (soon)</span>`;
       card.appendChild(overlay);
+    } else if (card.classList.contains('c-g')) {
+      card.classList.add('has-overlay');
+      const overlay = document.createElement('div');
+      overlay.className = 'card-overlay';
+      overlay.innerHTML = `<span class="overlay-text" style="text-transform: none;">play a mini game?</span>`;
+      card.appendChild(overlay);
     } else if (card.classList.contains('c-green')) {
       card.classList.add('has-overlay');
       const overlay = document.createElement('div');
@@ -205,16 +314,36 @@ if (projectTitleEl) {
   const currentProject = projects[projectIndex];
 
   // Update Title & Description
-  if (currentProject.titleHtml) {
-    projectTitleEl.innerHTML = currentProject.titleHtml;
+  const projectInfoEl = document.querySelector('.project-info');
+  const projectMainEl = document.querySelector('.project-main');
+  if (!currentProject.title && !currentProject.titleHtml && !currentProject.description) {
+    if (projectInfoEl) projectInfoEl.style.display = 'none';
+    if (projectMainEl) projectMainEl.style.marginTop = '14vh';
   } else {
-    projectTitleEl.textContent = currentProject.title;
+    if (projectInfoEl) projectInfoEl.style.display = '';
+    if (projectMainEl) projectMainEl.style.marginTop = '';
+    if (currentProject.titleHtml) {
+      projectTitleEl.innerHTML = currentProject.titleHtml;
+    } else {
+      projectTitleEl.textContent = currentProject.title;
+    }
+    projectDescEl.textContent = currentProject.description;
   }
-  projectDescEl.textContent = currentProject.description;
 
   // Update Visuals
   if (projectVisualsContainer) {
     projectVisualsContainer.innerHTML = currentProject.visuals;
+
+    // Initialize Mini Games if present
+    if (document.getElementById('chroma-game-container')) {
+      document.body.classList.add('chroma-active');
+      initChromaGame();
+    } else if (document.getElementById('type-speed-game-container')) {
+      document.body.classList.add('chroma-active');
+      initTypeSpeedGame();
+    } else {
+      document.body.classList.remove('chroma-active');
+    }
 
     // Scroll reveal animation for Map Project and Wish mobile mockups
     const mocksContainer = projectVisualsContainer.querySelector('.p-vis-directory-mocks, .p-vis-wish-mocks');
@@ -553,13 +682,23 @@ if (projectTitleEl) {
 
 
 
+  const isMiniGamePage = currentProject && (currentProject.id === 'andvch' || currentProject.id === 'type-speed');
+
   if (prevProjectLink) {
-    prevProjectLink.href = `project.html?id=${prevProject.id}`;
-    prevProjectLink.addEventListener('click', (e) => navigateWithFade(e, prevProjectLink.href));
+    if (isMiniGamePage) {
+      prevProjectLink.style.display = 'none';
+    } else {
+      prevProjectLink.href = `project.html?id=${prevProject.id}`;
+      prevProjectLink.addEventListener('click', (e) => navigateWithFade(e, prevProjectLink.href));
+    }
   }
   if (nextProjectLink) {
-    nextProjectLink.href = `project.html?id=${nextProject.id}`;
-    nextProjectLink.addEventListener('click', (e) => navigateWithFade(e, nextProjectLink.href));
+    if (isMiniGamePage) {
+      nextProjectLink.style.display = 'none';
+    } else {
+      nextProjectLink.href = `project.html?id=${nextProject.id}`;
+      nextProjectLink.addEventListener('click', (e) => navigateWithFade(e, nextProjectLink.href));
+    }
   }
 
   // Hide/Show Header on Scroll
@@ -670,98 +809,146 @@ let lastMouseX = 0;
 let lastMouseY = 0;
 let activeCard = null;
 
-window.addEventListener('mousemove', (e) => {
-  lastMouseX = e.clientX;
-  lastMouseY = e.clientY;
-  if (customCursor && !customCursor.classList.contains('card-mode')) {
-    customCursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
-  }
-});
+if (customCursor) {
+  customCursor.classList.remove('card-mode', 'absorbed-active', 'text-mode', 'explore-hover', 'say-hi-hover', 'wish-btn-hover');
+  customCursor.style.width = '32px';
+  customCursor.style.height = '32px';
+  customCursor.style.borderRadius = '50%';
+}
 
-// Detect interaction with text to change to "|" blue line
-document.addEventListener('mouseover', (e) => {
-  const target = e.target;
+// Helper to update custom cursor text mode (| orange line cursor) for selectable texts
+function updateCursorTextMode(target) {
+  if (!customCursor || customCursor.classList.contains('card-mode')) return;
 
-  // Exclude magnetic elements and their children from drawing the text cursor
+  // Exclude magnetic elements and their children from drawing text cursor
   const inMagneticElement = target.closest('.interaction-card, .magnetic-link');
   if (inMagneticElement) {
-    if (customCursor) customCursor.classList.remove('text-mode');
+    customCursor.classList.remove('text-mode');
+    customCursor.style.height = '';
     return;
   }
 
-  const textTags = ['H1', 'P', 'SPAN', 'A', 'DIV', 'TEXTAREA'];
-  const isTextElement =
-    ['H1', 'P', 'SPAN', 'A', 'TEXTAREA'].includes(target.tagName) ||
+  const textTags = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'P', 'SPAN', 'A', 'TEXTAREA', 'INPUT', 'LABEL', 'LI', 'MARK', 'CODE', 'B', 'STRONG', 'I', 'EM'];
+  const isTextTag = textTags.includes(target.tagName);
+  const isDirectTextDiv = target.tagName === 'DIV' && target.children.length === 0 && target.textContent.trim().length > 0;
+  const isSpecialText = (
     target.classList.contains('spec-label') ||
-    target.classList.contains('spec-size');
+    target.classList.contains('spec-size') ||
+    target.classList.contains('hero-title') ||
+    target.classList.contains('hero-subtitle') ||
+    target.classList.contains('section-title') ||
+    target.classList.contains('overlay-text')
+  );
 
-  if (isTextElement && !target.closest('.project-card.placeholder-1') && !target.closest('.color-spheres-container')) {
+  const isTextElement = (isTextTag || isDirectTextDiv || isSpecialText) &&
+    !target.closest('.project-card.placeholder-1') &&
+    !target.closest('.color-spheres-container');
+
+  if (isTextElement) {
     const computedStyle = window.getComputedStyle(target);
-    let h = parseFloat(computedStyle.lineHeight);
-    if (isNaN(h) || computedStyle.lineHeight === 'normal') {
-      h = parseFloat(computedStyle.fontSize) * 1.2;
-    }
-
-    if (customCursor) {
-      customCursor.classList.add('text-mode');
-      customCursor.style.height = `${h}px`;
-    }
-  } else {
-    if (customCursor) {
+    if (computedStyle.display === 'none') {
       customCursor.classList.remove('text-mode');
       customCursor.style.height = '';
+      return;
+    }
+
+    let fontSize = parseFloat(computedStyle.fontSize) || 16;
+    let lineHeight = parseFloat(computedStyle.lineHeight);
+    let h = (!isNaN(lineHeight) && computedStyle.lineHeight !== 'normal') ? lineHeight : fontSize * 1.25;
+    h = Math.max(14, Math.min(70, h));
+
+    customCursor.classList.add('text-mode');
+    customCursor.style.height = `${h}px`;
+  } else {
+    customCursor.classList.remove('text-mode');
+    customCursor.style.height = '';
+  }
+}
+
+window.addEventListener('mousemove', (e) => {
+  lastMouseX = e.clientX;
+  lastMouseY = e.clientY;
+  if (customCursor) {
+    if (!activeCard && customCursor.classList.contains('card-mode')) {
+      customCursor.classList.remove('card-mode');
+      customCursor.style.width = '32px';
+      customCursor.style.height = '32px';
+      customCursor.style.borderRadius = '50%';
+    }
+
+    if (!customCursor.classList.contains('card-mode')) {
+      customCursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+      updateCursorTextMode(e.target);
     }
   }
 });
 
-// Helper to absorb custom cursor into card
+// Helper to get inner elements that should receive subtle magnetic dragging effect
+function getInnerMagneticElements(card) {
+  return card.querySelectorAll(
+    ':scope > *:not(.absorbed-card):not(.absorbed-pill):not(.btn-bg):not(.card-bg):not(.draft-overlay)'
+  );
+}
+
+// Helper to absorb custom cursor into card with physical scaling animation
 function absorbCursor(card, clientX, clientY) {
   activeCard = card;
-  if (customCursor) {
-    customCursor.classList.add('card-mode');
-    customCursor.classList.add('transitioning');
-    
-    // Special case for Explore button
-    const btnText = card.querySelector('.btn-text')?.textContent.trim().toLowerCase();
-    if (btnText === 'explore') {
-      customCursor.classList.add('explore-hover');
-    }
-
-    // Special case for Wish Action buttons
-    if (card.classList.contains('wish-action-btn')) {
-      customCursor.classList.add('wish-btn-hover');
-    }
-
-    clearTimeout(cursorTransitionTimeout);
-    cursorTransitionTimeout = setTimeout(() => {
-      customCursor.classList.remove('transitioning');
-    }, 300);
-  }
+  card.classList.add('is-absorbed');
 
   // Get card dimensions and center
   const rect = card.getBoundingClientRect();
   const centerX = rect.left + rect.width / 2;
   const centerY = rect.top + rect.height / 2;
 
+  const cardStyle = window.getComputedStyle(card);
+  const borderRadius = cardStyle.borderRadius || '24px';
+
+  // Outer container stays strictly contained / locked in place
+  card.style.transition = 'transform 0.3s ease';
+  card.style.transform = 'translate(0px, 0px)';
+
   if (customCursor) {
+    customCursor.classList.remove('text-mode');
+    customCursor.style.backgroundColor = '#282833';
+
+    // If customCursor is not in card-mode yet, initialize its position at exact entry point as 32px circle
+    if (!customCursor.classList.contains('card-mode')) {
+      customCursor.style.transition = 'none';
+      customCursor.style.width = '32px';
+      customCursor.style.height = '32px';
+      customCursor.style.borderRadius = '50%';
+      customCursor.style.transform = `translate(${clientX}px, ${clientY}px) translate(-50%, -50%)`;
+
+      // Force browser reflow to register starting state
+      void customCursor.offsetHeight;
+
+      customCursor.classList.add('card-mode');
+    }
+
+    // Smoothly expand customCursor to match stationary card size, border radius, and center position
+    customCursor.style.transition = `
+      width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      border-radius 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 0.3s ease
+    `;
     customCursor.style.width = `${rect.width}px`;
     customCursor.style.height = `${rect.height}px`;
-
-    // Inherit the exact border radius of the hovered element so it perfectly matches (pill, rounded-3xl, etc.)
-    const cardStyle = window.getComputedStyle(card);
-    customCursor.style.borderRadius = cardStyle.borderRadius;
+    customCursor.style.borderRadius = borderRadius;
+    customCursor.style.transform = `translate(${centerX}px, ${centerY}px) translate(-50%, -50%)`;
   }
 
-  card.style.transition = 'transform 0.1s ease-out, background-color 0.1s ease';
-
+  // Subtle dragging effect of inner text/icons ONLY
   const xDist = clientX - centerX;
   const yDist = clientY - centerY;
-  const moveX = xDist * 0.03;
-  const moveY = yDist * 0.03;
-
-  if (customCursor) {
-    customCursor.style.transform = `translate(${centerX + moveX}px, ${centerY + moveY}px) translate(-50%, -50%)`;
-  }
+  const innerMoveX = xDist * 0.10;
+  const innerMoveY = yDist * 0.10;
+  const innerElements = getInnerMagneticElements(card);
+  innerElements.forEach(el => {
+    el.style.transition = 'transform 0.1s ease-out';
+    el.style.transform = `translate(${innerMoveX}px, ${innerMoveY}px)`;
+  });
 }
 
 // Helper to reset custom cursor back to circle
@@ -770,24 +957,35 @@ function resetActiveCard(card, clientX, clientY) {
     customCursor.classList.remove('card-mode');
     customCursor.classList.remove('explore-hover');
     customCursor.classList.remove('wish-btn-hover');
-    customCursor.classList.add('transitioning');
 
-    clearTimeout(cursorTransitionTimeout);
-    cursorTransitionTimeout = setTimeout(() => {
-      customCursor.classList.remove('transitioning');
-    }, 300);
+    // Smoothly shrink customCursor back to 32px circle centered at exit mouse position
+    customCursor.style.transition = `
+      width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      border-radius 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 0.3s ease
+    `;
+    customCursor.style.width = '32px';
+    customCursor.style.height = '32px';
+    customCursor.style.borderRadius = '50%';
+    customCursor.style.backgroundColor = '';
 
-    customCursor.style.width = '';
-    customCursor.style.height = '';
-    customCursor.style.borderRadius = '';
-
-    // Restore transform immediately to current mouse position
-    customCursor.style.transform = `translate(${clientX}px, ${clientY}px) translate(-50%, -50%)`;
+    if (clientX !== undefined && clientY !== undefined) {
+      customCursor.style.transform = `translate(${clientX}px, ${clientY}px) translate(-50%, -50%)`;
+    }
   }
 
   if (card) {
-    card.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.3s ease';
+    card.classList.remove('is-absorbed');
+    card.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
     card.style.transform = 'translate(0px, 0px)';
+
+    const innerElements = getInnerMagneticElements(card);
+    innerElements.forEach(el => {
+      el.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
+      el.style.transform = 'translate(0px, 0px)';
+    });
   }
 }
 
@@ -816,16 +1014,21 @@ document.querySelectorAll('.interaction-card, .magnetic-link').forEach(card => {
     const xDist = mouseX - centerX;
     const yDist = mouseY - centerY;
 
-    const moveX = xDist * 0.03;
-    const moveY = yDist * 0.03;
+    // Container stays contained/stationary
+    card.style.transform = 'translate(0px, 0px)';
 
-    // Magnetize main container with minimized parallax
-    card.style.transform = `translate(${moveX}px, ${moveY}px)`;
-
-    // Cursor aligns exactly with the transformed card
-    if (customCursor) {
-      customCursor.style.transform = `translate(${centerX + moveX}px, ${centerY + moveY}px) translate(-50%, -50%)`;
+    // Keep custom cursor perfectly aligned with stationary card center
+    if (customCursor && customCursor.classList.contains('card-mode')) {
+      customCursor.style.transform = `translate(${centerX}px, ${centerY}px) translate(-50%, -50%)`;
     }
+
+    // ONLY drag inner text & icon elements towards cursor position
+    const innerMoveX = xDist * 0.10;
+    const innerMoveY = yDist * 0.10;
+    const innerElements = getInnerMagneticElements(card);
+    innerElements.forEach(el => {
+      el.style.transform = `translate(${innerMoveX}px, ${innerMoveY}px)`;
+    });
   });
 
   card.addEventListener('mouseleave', (e) => {
@@ -843,22 +1046,26 @@ window.addEventListener('scroll', () => {
 
   if (cardUnderMouse) {
     if (cardUnderMouse === activeCard) {
-      // The cursor is still over the active card, update positions as it scrolls
       const rect = activeCard.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
 
       const xDist = lastMouseX - centerX;
       const yDist = lastMouseY - centerY;
-      const moveX = xDist * 0.03;
-      const moveY = yDist * 0.03;
 
-      activeCard.style.transform = `translate(${moveX}px, ${moveY}px)`;
+      activeCard.style.transform = 'translate(0px, 0px)';
+
+      const innerMoveX = xDist * 0.10;
+      const innerMoveY = yDist * 0.10;
+      const innerElements = getInnerMagneticElements(activeCard);
+      innerElements.forEach(el => {
+        el.style.transform = `translate(${innerMoveX}px, ${innerMoveY}px)`;
+      });
+
       if (customCursor) {
-        customCursor.style.transform = `translate(${centerX + moveX}px, ${centerY + moveY}px) translate(-50%, -50%)`;
+        customCursor.style.transform = `translate(${centerX}px, ${centerY}px) translate(-50%, -50%)`;
       }
     } else {
-      // The cursor transitioned onto a different card during scroll
       const oldCard = activeCard;
       activeCard = null;
       if (oldCard) {
@@ -867,7 +1074,6 @@ window.addEventListener('scroll', () => {
       absorbCursor(cardUnderMouse, lastMouseX, lastMouseY);
     }
   } else {
-    // No card is under the cursor now
     if (activeCard) {
       const oldCard = activeCard;
       activeCard = null;
@@ -881,50 +1087,81 @@ const heroSayHiBtn = document.getElementById('hero-say-hi');
 const messageOverlay = document.getElementById('message-overlay');
 const messageInput = document.getElementById('message-input');
 const msgSendBtn = document.getElementById('msg-send-btn');
+const typeTestBtn = document.getElementById('type-test-btn');
 const heroActions = document.getElementById('hero-actions');
 const messageActions = document.getElementById('message-actions');
 
 let messageSent = false;
+let typeTestTimer = null;
+
+if (typeTestBtn) {
+  typeTestBtn.addEventListener('click', () => {
+    window.location.href = 'project.html?id=type-speed';
+  });
+}
 
 if (heroSayHiBtn) {
   heroSayHiBtn.addEventListener('click', (e) => {
     e.preventDefault();
 
+    if (typeTestTimer) {
+      clearTimeout(typeTestTimer);
+      typeTestTimer = null;
+    }
+
     if (document.body.classList.contains('session-active')) {
-      // Act as "Go Back"
-      const currentRect = heroSayHiBtn.getBoundingClientRect();
+      // Act as "Go Back": Hide type test button FIRST before going back!
+      const executeGoBack = () => {
+        const currentRect = heroSayHiBtn.getBoundingClientRect();
 
-      // Move back to hero
-      heroActions.appendChild(heroSayHiBtn);
+        // Move back to hero
+        heroActions.appendChild(heroSayHiBtn);
 
-      const arrowSpan = heroSayHiBtn.querySelector('.btn-arrow');
-      const textSpan = heroSayHiBtn.querySelector('.btn-text');
+        const arrowSpan = heroSayHiBtn.querySelector('.btn-arrow');
+        const textSpan = heroSayHiBtn.querySelector('.btn-text');
 
-      if (messageSent) {
-        if (arrowSpan) arrowSpan.style.display = 'none';
-        if (textSpan) textSpan.innerHTML = 'thank you!';
+        if (messageSent) {
+          if (arrowSpan) arrowSpan.style.display = 'none';
+          if (textSpan) textSpan.innerHTML = 'thank you!';
+        } else {
+          if (arrowSpan) { arrowSpan.style.display = 'inline-block'; arrowSpan.innerHTML = '&rarr;'; }
+          if (textSpan) textSpan.innerHTML = 'say hi';
+        }
+
+        document.body.classList.remove('session-active');
+
+        // Target rect in the hero section
+        const targetRect = heroSayHiBtn.getBoundingClientRect();
+
+        const dx = currentRect.left - targetRect.left;
+        const dy = currentRect.top - targetRect.top;
+
+        heroSayHiBtn.style.transition = 'none';
+        heroSayHiBtn.style.transform = `translate(${dx}px, ${dy}px)`;
+
+        heroSayHiBtn.offsetWidth; // reflow
+
+        heroSayHiBtn.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
+        heroSayHiBtn.style.transform = 'translate(0px, 0px)';
+
+        setTimeout(() => {
+          heroSayHiBtn.style.transition = '';
+          if (typeTestBtn) {
+            typeTestBtn.classList.add('hidden');
+            typeTestBtn.classList.remove('fade-out', 'fade-in');
+          }
+        }, 600);
+      };
+
+      if (typeTestBtn && !typeTestBtn.classList.contains('hidden')) {
+        typeTestBtn.classList.remove('fade-in');
+        typeTestBtn.classList.add('fade-out');
+
+        // Wait 200ms for type test button to fade out first, then execute go back!
+        setTimeout(executeGoBack, 200);
       } else {
-        if (arrowSpan) { arrowSpan.style.display = 'inline-block'; arrowSpan.innerHTML = '&rarr;'; }
-        if (textSpan) textSpan.innerHTML = 'say hi';
+        executeGoBack();
       }
-
-      document.body.classList.remove('session-active');
-
-      // Target rect in the hero section
-      const targetRect = heroSayHiBtn.getBoundingClientRect();
-
-      const dx = currentRect.left - targetRect.left;
-      const dy = currentRect.top - targetRect.top;
-
-      heroSayHiBtn.style.transition = 'none';
-      heroSayHiBtn.style.transform = `translate(${dx}px, ${dy}px)`;
-
-      heroSayHiBtn.offsetWidth; // reflow
-
-      heroSayHiBtn.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
-      heroSayHiBtn.style.transform = 'translate(0px, 0px)';
-
-      setTimeout(() => heroSayHiBtn.style.transition = '', 600);
 
     } else {
       // Act as "Say Hi"
@@ -936,6 +1173,11 @@ if (heroSayHiBtn) {
       messageInput.value = '';
       msgSendBtn.classList.remove('fade-in');
       msgSendBtn.classList.add('hidden');
+
+      if (typeTestBtn) {
+        typeTestBtn.classList.add('hidden');
+        typeTestBtn.classList.remove('fade-in', 'fade-out');
+      }
 
       // Move to overlay
       messageActions.insertBefore(heroSayHiBtn, msgSendBtn);
@@ -961,6 +1203,14 @@ if (heroSayHiBtn) {
 
       setTimeout(() => heroSayHiBtn.style.transition = '', 600);
       setTimeout(() => messageInput.focus(), 600);
+
+      // Show type test button with a 380ms delay after clicking "say hi"
+      typeTestTimer = setTimeout(() => {
+        if (typeTestBtn && document.body.classList.contains('session-active') && messageInput.value.trim().length === 0) {
+          typeTestBtn.classList.remove('hidden', 'fade-out');
+          typeTestBtn.classList.add('fade-in');
+        }
+      }, 380);
     }
   });
 }
@@ -972,9 +1222,22 @@ if (messageInput) {
         msgSendBtn.classList.remove('hidden');
         msgSendBtn.classList.add('fade-in');
       }
+      if (typeTestBtn && !typeTestBtn.classList.contains('hidden')) {
+        typeTestBtn.classList.remove('fade-in');
+        typeTestBtn.classList.add('fade-out');
+        setTimeout(() => {
+          if (messageInput.value.trim().length > 0) {
+            typeTestBtn.classList.add('hidden');
+          }
+        }, 180);
+      }
     } else {
       msgSendBtn.classList.add('hidden');
       msgSendBtn.classList.remove('fade-in');
+      if (typeTestBtn && document.body.classList.contains('session-active')) {
+        typeTestBtn.classList.remove('hidden', 'fade-out');
+        typeTestBtn.classList.add('fade-in');
+      }
     }
   });
 }

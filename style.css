@@ -141,14 +141,15 @@ body.fade-out {
   margin-bottom: 2rem;
 }
 
-.say-hi-btn {
+.say-hi-btn,
+.explore-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: calc(16.666% - 13.33px); /* Exactly 1 column width */
   min-width: 120px; /* Fallback for small viewframes */
   aspect-ratio: 2.2 / 1; /* Slower ratio increases relative height compared to width */
-  border: 2px solid white;
+  border: none;
   border-radius: 9999px; /* Perfect pill shape dynamically */
   color: var(--text-primary);
   text-decoration: none;
@@ -156,51 +157,86 @@ body.fade-out {
   font-size: clamp(0.85rem, 1.25vw, 1.1rem);
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   background: transparent;
-  backdrop-filter: blur(10px);
   position: relative;
-  z-index: 10001;
 }
 
-.explore-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: calc(16.666% - 13.33px); 
-  min-width: 120px; 
-  aspect-ratio: 2.2 / 1; 
+.btn-bg {
+  position: absolute;
+  inset: 0;
   border: 2px solid white;
   border-radius: 9999px;
-  color: var(--text-primary);
-  text-decoration: none;
-  font-family: var(--font-mono);
-  font-size: clamp(0.85rem, 1.25vw, 1.1rem);
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   background: transparent;
   backdrop-filter: blur(10px);
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.3s ease;
+}
+
+.absorbed-pill,
+.absorbed-card {
+  display: none !important;
+}
+
+.say-hi-btn.is-absorbed .absorbed-pill,
+.explore-btn.is-absorbed .absorbed-pill,
+.go-back-btn.is-absorbed .absorbed-pill,
+.social-link.is-absorbed .absorbed-pill,
+.social-link:hover .absorbed-pill,
+.magnetic-link.is-absorbed .absorbed-pill,
+.magnetic-link:hover .absorbed-pill,
+.interaction-card:hover .absorbed-card,
+.interaction-card.is-absorbed .absorbed-card,
+.interaction-card.is-absorbed .absorbed-pill,
+.write-card:hover .absorbed-card,
+.write-card.is-absorbed .absorbed-card,
+.speak-card:hover .absorbed-card,
+.speak-card.is-absorbed .absorbed-card {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+  background-color: #282833 !important;
+}
+
+.say-hi-btn.is-absorbed .btn-bg,
+.explore-btn.is-absorbed .btn-bg,
+.go-back-btn.is-absorbed .btn-bg,
+.magnetic-link.is-absorbed .btn-bg {
+  opacity: 0 !important;
+}
+
+.btn-content,
+.card-icon-wrapper,
+.speak-card svg,
+.interaction-card > *:not(.absorbed-card):not(.absorbed-pill):not(.btn-bg):not(.card-bg),
+.magnetic-link > *:not(.absorbed-card):not(.absorbed-pill):not(.btn-bg):not(.card-bg) {
   position: relative;
-  z-index: 10001; /* Much higher so it's guaranteed in front of cursor */
-  transform: translateZ(0); /* Hardware acceleration */
+  z-index: 3;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.custom-cursor.absorbed-active {
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 .btn-arrow {
   margin-right: 8px;
   transition: transform 0.3s ease;
   position: relative;
-  z-index: 99999;
+  z-index: 100000;
   display: inline-block;
   transform: translateZ(0); /* Force hardware layer */
 }
 
 .btn-text {
   position: relative;
-  z-index: 99999;
+  z-index: 100000;
   display: inline-block;
   transform: translateZ(0); /* Force hardware layer */
 }
 
 .say-hi-btn:hover,
 .explore-btn:hover {
-  border-color: transparent;
   background: transparent;
 }
 
@@ -220,7 +256,7 @@ body.fade-out {
 .project-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 12px;
+  gap: 6px;
   grid-auto-rows: 240px; /* Base height for 1 row */
 }
 
@@ -312,15 +348,12 @@ body.fade-out {
 
 /* 1. Wish 107.5 Concept */
 .c-wish { 
-  background-color: #030303; 
+  background-color: #121216 !important; 
+  background: #121216 !important;
 }
 
 .c-wish::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(135deg, rgba(244, 67, 41, 0.05) 0%, transparent 40%, transparent 60%, rgba(244, 67, 41, 0.05) 100%);
-  pointer-events: none;
+  display: none;
 }
 
 .wish-content {
@@ -343,7 +376,7 @@ body.fade-out {
 }
 
 .c-wish:hover .wish-logo-img {
-  transform: scale(1.05);
+  transform: none;
 }
 
 .wish-live-badge {
@@ -390,19 +423,22 @@ body.fade-out {
   transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .c-orb:hover .c-orb-img {
-  transform: scale(1.05);
+  transform: none;
 }
 
 /* 3. Medium */
-.c-medium { background: #1a1a1c; }
+.c-medium { background: #121216; }
 .c-medium-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* 4. E */
-.c-e { background: #121212; font-family: serif; font-size: 5rem; font-style: italic; background-image: linear-gradient(45deg, #ddd, #fff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+/* 4. E (Apple) */
+.c-e {
+  background: #121216 !important;
+  background-color: #121216 !important;
+}
 .e-video {
   width: 100%;
   height: 100%;
@@ -423,7 +459,7 @@ body.fade-out {
   transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .c-wallpaper:hover .wallpaper-img {
-  transform: scale(1.05);
+  transform: none;
 }
 
 /* 6. Directory App */
@@ -438,7 +474,7 @@ body.fade-out {
   transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .c-directory-app:hover .directory-app-img {
-  transform: scale(1.05);
+  transform: none;
 }
 
 /* 7. Car */
@@ -452,11 +488,11 @@ body.fade-out {
   transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .c-car:hover .car-video {
-  transform: scale(1.05);
+  transform: none;
 }
 
-/* 8. Gradient */
-.c-grad { background: radial-gradient(circle at center, #2a2a35 0%, #0d0d12 100%); }
+/* 8. Gradient / 18. ANDVCH */
+.c-grad { background: #121216; }
 .grad-logo-img {
   width: 100%;
   height: 100%;
@@ -464,11 +500,14 @@ body.fade-out {
   transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .c-grad:hover .grad-logo-img {
-  transform: scale(1.03);
+  transform: none;
 }
 
-/* 9. Voice */
-.c-voice { background: #111; }
+/* 9. Voice (FSL Translator) */
+.c-voice {
+  background: #121216 !important;
+  background-color: #121216 !important;
+}
 .c-voice-img {
   width: 75%;
   height: 75%;
@@ -476,7 +515,7 @@ body.fade-out {
   transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .c-voice:hover .c-voice-img {
-  transform: scale(1.05);
+  transform: none;
 }
 
 /* 10. G */
@@ -488,7 +527,10 @@ body.fade-out {
 }
 
 /* 11. Ambient */
-.c-ambient { background: #101014; font-size: 2.5rem; font-weight: 600; background-image: linear-gradient(90deg, #ff4081, #7c4dff); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: -1px;}
+.c-ambient {
+  background: #121216 !important;
+  background-color: #121216 !important;
+}
 .ambient-video {
   width: 100%;
   height: 100%;
@@ -498,7 +540,7 @@ body.fade-out {
 }
 
 /* 12. Yellow Box */
-.c-yellow { background: #161618; }
+.c-yellow { background: #121216; }
 .yellow-outline { width: 30px; height: 80px; border: 2px solid #ffeb3b; position: absolute; }
 .pink-dot { width: 50px; height: 50px; background: #ff4081; border-radius: 50%; position: absolute; }
 .c-yellow-img {
@@ -508,7 +550,10 @@ body.fade-out {
 }
 
 /* 13. M */
-.c-m { background: #161618; font-size: 5rem; font-family: sans-serif; font-weight: bold; -webkit-text-stroke: 1px #888; color: transparent; }
+.c-m {
+  background: #121216 !important;
+  background-color: #121216 !important;
+}
 .m-video {
   width: 100%;
   height: 100%;
@@ -518,19 +563,20 @@ body.fade-out {
   transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .c-m:hover .m-video {
-  transform: scale(1.05);
+  transform: none;
 }
 
-/* 14. 32 */
-.c-32 { background: #161618; }
-.c-32-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+/* 14. 32 / 23 */
+.c-32 {
+  background-color: #121216 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.c-32:hover .c-32-img {
-  transform: scale(1.05);
+.c-32-svg {
+  width: 80%;
+  height: 80%;
+  display: block;
 }
 
 /* 15. Watch */
@@ -542,7 +588,7 @@ body.fade-out {
   transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .c-watch:hover .watch-img {
-  transform: scale(1.05);
+  transform: none;
 }
 
 /* 16. Green Aurora */
@@ -556,7 +602,7 @@ body.fade-out {
   transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .c-green:hover .green-video {
-  transform: scale(1.05);
+  transform: none;
 }
 
 /* 17. PesoOS */
@@ -567,7 +613,7 @@ body.fade-out {
   transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .c-smart:hover .pesoos-svg {
-  transform: scale(1.05);
+  transform: none;
 }
 
 @keyframes wave-reveal {
@@ -746,26 +792,34 @@ body.fade-out {
   background-color: rgba(20, 20, 20, 0.6);
   border-radius: 24px; /* rounded-3xl */
   padding: 24px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
   text-decoration: none;
   height: 250px;
-  position: relative;
+  position: relative !important;
   overflow: hidden;
+  font-size: 0 !important; /* Collapse any whitespace nodes */
   transition: background-color 0.4s ease, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-  z-index: 10001;
+  z-index: 100 !important;
 }
 
+.interaction-card.is-absorbed,
 .interaction-card:hover {
-  background-color: transparent;
+  background-color: transparent !important;
 }
 
 .card-icon-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
+  position: absolute !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 3 !important;
+  font-size: 1rem;
 }
 
 .card-icon {
@@ -773,16 +827,18 @@ body.fade-out {
   will-change: transform;
   position: relative;
   z-index: 1001;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
 }
 
 .card-icon-img {
   width: 128px;
   height: 128px;
   object-fit: contain;
-  display: block;
+  display: block !important;
+  margin: 0 auto !important;
 }
 
 .card-caption {
@@ -1102,45 +1158,54 @@ body.fade-out {
   background-color: rgba(150, 150, 150, 0.4);
   border-radius: 50%;
   pointer-events: none;
-  z-index: 99999;
+  z-index: 999999;
   transform: translate(-50%, -50%);
-  transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1),
-              height 0.3s cubic-bezier(0.25, 1, 0.5, 1),
-              border-radius 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-radius 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
               background-color 0.3s ease,
-              opacity 0.5s ease;
+              opacity 0.3s ease;
   backdrop-filter: blur(2px);
+  will-change: width, height, transform, border-radius;
 }
 
 .custom-cursor.transitioning {
-  transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1),
-              height 0.3s cubic-bezier(0.25, 1, 0.5, 1),
-              border-radius 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-radius 0.35s cubic-bezier(0.16, 1, 0.3, 1),
               background-color 0.3s ease,
-              transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
-              opacity 0.5s ease;
+              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.3s ease;
 }
 
 .custom-cursor.text-mode {
-  width: 2px;
-  border-radius: 0;
-  background-color: #ff4d00;
-  backdrop-filter: none;
+  width: 2px !important;
+  border-radius: 1px !important;
+  background-color: #ff4d00 !important;
+  backdrop-filter: none !important;
+  box-shadow: 0 0 8px rgba(255, 77, 0, 0.4);
 }
 
 .custom-cursor.card-mode {
-  background-color: rgba(60, 60, 60, 0.9);
-  backdrop-filter: blur(4px);
-  z-index: 6; 
+  background-color: #282833 !important;
+  backdrop-filter: none;
+  z-index: 99 !important; 
   border-radius: 24px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+  opacity: 1 !important;
 }
 
 body.session-active .custom-cursor.card-mode {
-  z-index: 1999;
+  z-index: 1999 !important;
 }
 
-.custom-cursor.explore-hover {
-  border-radius: 9999px !important; /* Perfect pill shape to match Explore button */
+.custom-cursor.explore-hover,
+.custom-cursor.say-hi-hover {
+  border-radius: 9999px !important;
+  background-color: #282833 !important;
+  backdrop-filter: none !important;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6);
 }
 
 .custom-cursor.card-mode.wish-btn-hover {
@@ -1255,32 +1320,86 @@ body:not(.session-active) .message-input {
   z-index: 100;
 }
 
-#msg-send-btn {
-  width: calc((16.666% - 13.33px) * 0.666); /* 2/3 of a grid column */
-  min-width: 80px;
+#msg-send-btn,
+#type-test-btn {
+  width: auto;
+  min-width: 90px;
+  padding: 0 20px;
   aspect-ratio: unset; /* Drop aspect-ratio so it seamlessly inherits the exact height of the Go Back button */
 }
 
 .say-hi-btn.hidden,
 .explore-btn.hidden {
-  opacity: 0;
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
   transform: translateY(20px);
+}
+
+.type-test-btn.hidden {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: none !important;
 }
 
 .say-hi-btn.fade-in,
 .explore-btn.fade-in {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.say-hi-btn.fade-in {
   display: inline-flex !important;
-  animation: fadeIn 0.4s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: auto !important;
+  animation: buttonEnter 0.6s forwards cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.type-test-btn.fade-in {
+  display: inline-flex !important;
+  pointer-events: auto !important;
+  transform: none !important;
+  animation: fadeInOnly 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+}
+
+.say-hi-btn.fade-out,
+.explore-btn.fade-out {
+  display: inline-flex !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(15px) !important;
+  transition: opacity 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+}
+
+.type-test-btn.fade-out {
+  display: inline-flex !important;
+  pointer-events: none !important;
+  transform: none !important;
+  animation: fadeOutOnly 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+}
+
+@keyframes fadeInOnly {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOutOnly {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes buttonEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Page content transition when session active */
@@ -1422,13 +1541,13 @@ body.session-active .site-footer {
   align-items: center;
   transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
   text-decoration: none;
-  position: relative;
-  z-index: 1;
+  position: relative !important;
+  z-index: 100 !important;
 }
 
 .speak-item:hover {
-  transform: translateY(-2px);
-  z-index: 10; /* Places hovered item above the custom cursor (z-index: 6) */
+  transform: none;
+  z-index: 100 !important;
 }
 
 .interaction-card.speak-card {
@@ -1441,17 +1560,18 @@ body.session-active .site-footer {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative !important;
+  z-index: 100 !important;
 }
 
 .interaction-card.speak-card svg {
   width: 48%;
   height: auto;
   aspect-ratio: 1 / 1;
-  transition: transform 0.3s ease;
-}
-
-.speak-item:hover .interaction-card.speak-card svg {
-  transform: scale(1.1);
+  position: relative !important;
+  z-index: 1000 !important;
+  pointer-events: none !important;
+  will-change: transform;
 }
 
 .speak-text {
@@ -1503,6 +1623,16 @@ body.session-active .site-footer {
 /* ========================================= */
 body.splash-active {
   overflow: hidden;
+  height: 100vh;
+}
+
+html.no-splash body.splash-active {
+  overflow: auto !important;
+  height: auto !important;
+}
+
+html.no-splash .splash-screen {
+  display: none !important;
 }
 
 body.splash-active .custom-cursor {
@@ -1510,23 +1640,8 @@ body.splash-active .custom-cursor {
   pointer-events: none;
 }
 
-/* Hero section starts in its final position, hidden by opacity */
-body.splash-active main,
-body.splash-active .site-footer {
-  opacity: 0;
-}
-
-body.splash-active .grid-lines {
-  opacity: 0;
-}
-
-/* ========================================= */
-/* SPLASH SCREEN CONTAINER                   */
-/* ========================================= */
 .splash-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
+  position: relative;
   width: 100vw;
   height: 100vh;
   background-color: #000000;
@@ -1534,15 +1649,8 @@ body.splash-active .grid-lines {
   align-items: center;
   justify-content: center;
   z-index: 100000;
-  /* Mimics a physical scroll up */
-  transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1); 
   overflow: hidden;
-}
-
-/* Triggered via JS after 3200ms */
-.splash-screen.slide-up {
-  transform: translateY(-100vh); /* Physically moves up, revealing hero naturally */
-  pointer-events: none;
+  flex-shrink: 0;
 }
 
 .splash-logo-container {
@@ -1558,47 +1666,82 @@ body.splash-active .grid-lines {
 /* ========================================= */
 .logo-guides {
   position: absolute;
-  width: 140%; 
-  height: 140%;
-  z-index: 1; /* Sits behind the logo */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  /* Total time 2.9s, leaves a 0.3s gap before JS fires at 3.2s */
-  animation: guides-lifecycle 2.9s ease-in-out forwards; 
-}
-
-.guide-x {
-  position: absolute;
-  top: 50%;
+  top: 0;
   left: 0;
   width: 100%;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.4); /* Much sharper visibility */
-}
-
-.guide-y {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 1px;
   height: 100%;
-  background: rgba(255, 255, 255, 0.4);
+  z-index: 1; /* Sits behind the logo */
+  pointer-events: none;
 }
 
-.guide-box {
+/* Base line style */
+.guide-line {
   position: absolute;
-  width: 70%;
-  height: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.15);
+  pointer-events: none;
 }
 
-@keyframes guides-lifecycle {
-  0% { opacity: 0; transform: scale(0.95); }
-  15% { opacity: 1; transform: scale(1); } /* Fades in quickly */
-  80% { opacity: 1; transform: scale(1); } /* Holds while the logo animates */
-  100% { opacity: 0; transform: scale(1.02); } /* Fades out slightly before the main reveal */
+/* Horizontal Lines: 1px high, extend past left/right by 12% overhang, draw from LEFT */
+.guide-h {
+  height: 1px;
+  left: -12%;
+  width: 124%;
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: draw-horizontal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.gh-1 { top: 0%; animation-delay: 0.04s; }
+.gh-circle-top { top: 37.15%; animation-delay: 0.10s; } /* Top edge of orange circle */
+.gh-2 { top: 48.5%; animation-delay: 0.16s; }
+.gh-3 { top: 50.7%; animation-delay: 0.22s; }
+.gh-4 { top: 100%; animation-delay: 0.28s; }
+
+/* Vertical Lines: 1px wide, extend past top/bottom by 12% overhang, draw from TOP */
+.guide-v {
+  width: 1px;
+  top: -12%;
+  height: 124%;
+  transform-origin: center top;
+  transform: scaleY(0);
+  animation: draw-vertical 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.gv-1 { left: 0%; animation-delay: 0.04s; }
+.gv-2 { left: 26.8%; animation-delay: 0.08s; }
+.gv-3 { left: 43.6%; animation-delay: 0.13s; }
+.gv-4 { left: 63.2%; animation-delay: 0.18s; }
+.gv-5 { left: 77.2%; animation-delay: 0.23s; }
+.gv-6 { left: 88.5%; animation-delay: 0.28s; }
+.gv-7 { left: 93.1%; animation-delay: 0.33s; }
+.gv-8 { left: 100%; animation-delay: 0.38s; }
+
+@keyframes draw-horizontal {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes draw-vertical {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
 }
 
 /* ========================================= */
@@ -1613,22 +1756,22 @@ body.splash-active .grid-lines {
 
 .splash-logo .logo-letter {
   opacity: 0;
-  animation: letter-reveal 1s cubic-bezier(0.85, 0, 0.15, 1) forwards;
+  animation: letter-reveal 0.6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
 }
 
-/* Stagger Delays using nth-of-type (ignores the <defs> tag) */
-.splash-logo path.logo-letter:nth-of-type(1) { animation-delay: 0.0s; } /* A */
-.splash-logo path.logo-letter:nth-of-type(2) { animation-delay: 0.2s; } /* N */
-.splash-logo path.logo-letter:nth-of-type(4) { animation-delay: 0.4s; } /* D */
-.splash-logo path.logo-letter:nth-of-type(5) { animation-delay: 0.6s; } /* V */
-.splash-logo path.logo-letter:nth-of-type(6) { animation-delay: 0.8s; } /* C */
-.splash-logo path.logo-letter:nth-of-type(7) { animation-delay: 1.0s; } /* H */
+/* Stagger Delays with S-curve pacing (slow -> fast -> slow) starting at 90% of lines (0.40s) */
+.splash-logo path.logo-letter:nth-of-type(1) { animation-delay: 0.40s !important; } /* A - Slow start */
+.splash-logo path.logo-letter:nth-of-type(2) { animation-delay: 0.58s !important; } /* N */
+.splash-logo path.logo-letter:nth-of-type(4) { animation-delay: 0.72s !important; } /* D - Accelerating */
+.splash-logo path.logo-letter:nth-of-type(5) { animation-delay: 0.83s !important; } /* V - Fast peak */
+.splash-logo path.logo-letter:nth-of-type(6) { animation-delay: 0.94s !important; } /* C - Fast peak */
+.splash-logo path.logo-letter:nth-of-type(7) { animation-delay: 1.08s !important; } /* H - Decelerating */
 
 .splash-logo path.logo-circle {
   opacity: 0;
   transform: translateX(-170px); 
-  animation: circle-slide 1s cubic-bezier(0.85, 0, 0.15, 1) forwards;
-  animation-delay: 1.5s !important; /* Locks this delay in so the circle waits for H */
+  animation: circle-slide 0.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  animation-delay: 1.26s !important; /* Dot slides into place as final resolution */
 }
 
 @keyframes letter-reveal {
