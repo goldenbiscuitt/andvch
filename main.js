@@ -258,6 +258,12 @@ denseCards.forEach(card => {
       overlay.className = 'card-overlay';
       overlay.innerHTML = `<span class="overlay-text" style="text-transform: none;">play a mini game?</span>`;
       card.appendChild(overlay);
+    } else if (card.classList.contains('c-grad')) {
+      card.classList.add('has-overlay');
+      const overlay = document.createElement('div');
+      overlay.className = 'card-overlay';
+      overlay.innerHTML = `<span class="overlay-text" style="text-transform: none;">about me</span>`;
+      card.appendChild(overlay);
     } else if (card.classList.contains('c-green')) {
       card.classList.add('has-overlay');
       const overlay = document.createElement('div');
@@ -333,6 +339,7 @@ if (projectTitleEl) {
   // Update Visuals
   if (projectVisualsContainer) {
     projectVisualsContainer.innerHTML = currentProject.visuals;
+    initMagneticListeners(projectVisualsContainer);
 
     // Initialize Mini Games if present
     if (document.getElementById('chroma-game-container')) {
@@ -902,6 +909,8 @@ function absorbCursor(card, clientX, clientY) {
 
   const cardStyle = window.getComputedStyle(card);
   const borderRadius = cardStyle.borderRadius || '24px';
+  const computedBg = cardStyle.backgroundColor;
+  const targetBg = (computedBg && computedBg !== 'rgba(0, 0, 0, 0)' && computedBg !== 'transparent') ? computedBg : '#282833';
 
   // Outer container stays strictly contained / locked in place
   card.style.transition = 'transform 0.3s ease';
@@ -909,21 +918,7 @@ function absorbCursor(card, clientX, clientY) {
 
   if (customCursor) {
     customCursor.classList.remove('text-mode');
-    customCursor.style.backgroundColor = '#282833';
-
-    // If customCursor is not in card-mode yet, initialize its position at exact entry point as 32px circle
-    if (!customCursor.classList.contains('card-mode')) {
-      customCursor.style.transition = 'none';
-      customCursor.style.width = '32px';
-      customCursor.style.height = '32px';
-      customCursor.style.borderRadius = '50%';
-      customCursor.style.transform = `translate(${clientX}px, ${clientY}px) translate(-50%, -50%)`;
-
-      // Force browser reflow to register starting state
-      void customCursor.offsetHeight;
-
-      customCursor.classList.add('card-mode');
-    }
+    customCursor.classList.add('card-mode');
 
     // Smoothly expand customCursor to match stationary card size, border radius, and center position
     customCursor.style.transition = `
@@ -933,6 +928,7 @@ function absorbCursor(card, clientX, clientY) {
       transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
       background-color 0.3s ease
     `;
+    customCursor.style.backgroundColor = targetBg;
     customCursor.style.width = `${rect.width}px`;
     customCursor.style.height = `${rect.height}px`;
     customCursor.style.borderRadius = borderRadius;
@@ -989,8 +985,10 @@ function resetActiveCard(card, clientX, clientY) {
   }
 }
 
-// Magnetic Interaction Logic
-document.querySelectorAll('.interaction-card, .magnetic-link').forEach(card => {
+function initMagneticCard(card) {
+  if (card._hasMagneticInit) return;
+  card._hasMagneticInit = true;
+
   let rect, centerX, centerY;
 
   card.addEventListener('mouseenter', (e) => {
@@ -1003,7 +1001,6 @@ document.querySelectorAll('.interaction-card, .magnetic-link').forEach(card => {
   card.addEventListener('mousemove', (e) => {
     if (activeCard !== card) return;
     
-    // Update local variables in case page has scrolled or bounding box shifted
     rect = card.getBoundingClientRect();
     centerX = rect.left + rect.width / 2;
     centerY = rect.top + rect.height / 2;
@@ -1014,15 +1011,12 @@ document.querySelectorAll('.interaction-card, .magnetic-link').forEach(card => {
     const xDist = mouseX - centerX;
     const yDist = mouseY - centerY;
 
-    // Container stays contained/stationary
     card.style.transform = 'translate(0px, 0px)';
 
-    // Keep custom cursor perfectly aligned with stationary card center
     if (customCursor && customCursor.classList.contains('card-mode')) {
       customCursor.style.transform = `translate(${centerX}px, ${centerY}px) translate(-50%, -50%)`;
     }
 
-    // ONLY drag inner text & icon elements towards cursor position
     const innerMoveX = xDist * 0.10;
     const innerMoveY = yDist * 0.10;
     const innerElements = getInnerMagneticElements(card);
@@ -1037,49 +1031,63 @@ document.querySelectorAll('.interaction-card, .magnetic-link').forEach(card => {
     }
     resetActiveCard(card, e.clientX, e.clientY);
   });
-});
+}
+
+function initMagneticListeners(parent = document) {
+  parent.querySelectorAll('.interaction-card, .magnetic-link').forEach(initMagneticCard);
+}
+
+// Initial setup
+initMagneticListeners(document);
 
 // Reset/Update cursor if page is scrolled while cursor is over cards
+let isScrollingCursorCheck = false;
 window.addEventListener('scroll', () => {
-  const element = document.elementFromPoint(lastMouseX, lastMouseY);
-  const cardUnderMouse = element ? element.closest('.interaction-card, .magnetic-link') : null;
+  if (isScrollingCursorCheck) return;
+  isScrollingCursorCheck = true;
+  requestAnimationFrame(() => {
+    isScrollingCursorCheck = false;
+    if (lastMouseX === undefined || lastMouseY === undefined) return;
+    const element = document.elementFromPoint(lastMouseX, lastMouseY);
+    const cardUnderMouse = element ? element.closest('.interaction-card, .magnetic-link') : null;
 
-  if (cardUnderMouse) {
-    if (cardUnderMouse === activeCard) {
-      const rect = activeCard.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
+    if (cardUnderMouse) {
+      if (cardUnderMouse === activeCard) {
+        const rect = activeCard.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
 
-      const xDist = lastMouseX - centerX;
-      const yDist = lastMouseY - centerY;
+        const xDist = lastMouseX - centerX;
+        const yDist = lastMouseY - centerY;
 
-      activeCard.style.transform = 'translate(0px, 0px)';
+        activeCard.style.transform = 'translate(0px, 0px)';
 
-      const innerMoveX = xDist * 0.10;
-      const innerMoveY = yDist * 0.10;
-      const innerElements = getInnerMagneticElements(activeCard);
-      innerElements.forEach(el => {
-        el.style.transform = `translate(${innerMoveX}px, ${innerMoveY}px)`;
-      });
+        const innerMoveX = xDist * 0.10;
+        const innerMoveY = yDist * 0.10;
+        const innerElements = getInnerMagneticElements(activeCard);
+        innerElements.forEach(el => {
+          el.style.transform = `translate(${innerMoveX}px, ${innerMoveY}px)`;
+        });
 
-      if (customCursor) {
-        customCursor.style.transform = `translate(${centerX}px, ${centerY}px) translate(-50%, -50%)`;
+        if (customCursor) {
+          customCursor.style.transform = `translate(${centerX}px, ${centerY}px) translate(-50%, -50%)`;
+        }
+      } else {
+        const oldCard = activeCard;
+        activeCard = null;
+        if (oldCard) {
+          resetActiveCard(oldCard, lastMouseX, lastMouseY);
+        }
+        absorbCursor(cardUnderMouse, lastMouseX, lastMouseY);
       }
     } else {
-      const oldCard = activeCard;
-      activeCard = null;
-      if (oldCard) {
+      if (activeCard) {
+        const oldCard = activeCard;
+        activeCard = null;
         resetActiveCard(oldCard, lastMouseX, lastMouseY);
       }
-      absorbCursor(cardUnderMouse, lastMouseX, lastMouseY);
     }
-  } else {
-    if (activeCard) {
-      const oldCard = activeCard;
-      activeCard = null;
-      resetActiveCard(oldCard, lastMouseX, lastMouseY);
-    }
-  }
+  });
 }, { passive: true });
 
 // Message Session Logic

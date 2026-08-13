@@ -149,6 +149,26 @@
         text-align: left !important;
       }
 
+      /* Core statement intro section: Anchored on 1st column guideline, left aligned, full width */
+      #project-visuals-container .p-vis-about-intro-section {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: auto !important;
+        left: auto !important;
+        right: auto !important;
+        position: relative !important;
+      }
+
+      #project-visuals-container .p-vis-about-intro-section .p-details-box {
+        margin-left: 0 !important;
+        margin-right: auto !important;
+        text-align: left !important;
+        align-items: flex-start !important;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+
       /* Prevent first-child full-width breakout for Wish mocks */
       #project-visuals-container .p-vis-wish-mocks {
         width: 100% !important;
@@ -176,11 +196,20 @@
 
     <header class="project-header">
       <div class="header-left">
-        <a href="index.html" class="logo-link magnetic-link button-padding">andvch.</a>
+        <a href="index.html" class="logo-link say-hi-btn magnetic-link button-padding">
+          <span class="btn-bg"></span>
+          <span class="btn-content"><span class="btn-text">andvch.</span></span>
+        </a>
       </div>
       <div class="header-right">
-        <a href="#" id="prev-project" class="nav-link magnetic-link button-padding">Previous</a>
-        <a href="#" id="next-project" class="nav-link magnetic-link button-padding">Next</a>
+        <a href="#" id="prev-project" class="nav-link say-hi-btn magnetic-link button-padding">
+          <span class="btn-bg"></span>
+          <span class="btn-content"><span class="btn-text">Previous</span></span>
+        </a>
+        <a href="#" id="next-project" class="nav-link say-hi-btn magnetic-link button-padding">
+          <span class="btn-bg"></span>
+          <span class="btn-content"><span class="btn-text">Next</span></span>
+        </a>
       </div>
     </header>
 
@@ -202,22 +231,33 @@
 
     <footer class="site-footer">
       <div class="footer-left-group">
-        <a href="index.html" class="back-to-top social-link magnetic-link" aria-label="Back to home">
-          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"
-            stroke-linecap="round" stroke-linejoin="round" class="house-icon">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-          </svg>
+        <a href="#" class="back-to-top say-hi-btn social-link magnetic-link" aria-label="Back to top">
+          <span class="btn-bg"></span>
+          <span class="btn-content">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"
+              stroke-linecap="round" stroke-linejoin="round" class="house-icon">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+          </span>
         </a>
         <div class="footer-links">
-          <a href="https://x.com/andvch" class="social-link magnetic-link" target="_blank"
-            rel="noopener noreferrer">twitter</a>
+          <a href="https://x.com/andvch" class="social-link say-hi-btn magnetic-link" target="_blank" rel="noopener noreferrer">
+            <span class="btn-bg"></span>
+            <span class="btn-content"><span class="btn-text">X (twitter)</span></span>
+          </a>
           <span class="footer-dot">•</span>
-          <a href="https://github.com/goldenbiscuitt" class="social-link magnetic-link" target="_blank"
-            rel="noopener noreferrer">github</a>
+          <a href="https://github.com/goldenbiscuitt" class="social-link say-hi-btn magnetic-link" target="_blank"
+            rel="noopener noreferrer">
+            <span class="btn-bg"></span>
+            <span class="btn-content"><span class="btn-text">github</span></span>
+          </a>
           <span class="footer-dot">•</span>
-          <a href="https://linkedin.com/in/adcheca" class="social-link magnetic-link" target="_blank"
-            rel="noopener noreferrer">linkedin</a>
+          <a href="https://linkedin.com/in/adcheca" class="social-link say-hi-btn magnetic-link" target="_blank"
+            rel="noopener noreferrer">
+            <span class="btn-bg"></span>
+            <span class="btn-content"><span class="btn-text">linkedin</span></span>
+          </a>
         </div>
       </div>
       <div class="footer-credit">
