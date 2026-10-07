@@ -8,13 +8,15 @@
     <link rel="icon" type="image/png" href="assets/img/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-      rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" media="print" onload="this.media='all'">
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap">
+    </noscript>
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="project.css" />
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5/dist/iro.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5/dist/iro.min.js" defer></script>
     <style>
       /* Project Page Specific Layout */
       .project-header {
@@ -261,9 +263,7 @@
         </div>
       </div>
       <div class="footer-credit">
-        <b>made in The Philippines</b> <br>
-        <span class="disclaimer">referenced to the portfolio of <a href="https://azumbrunnen.me/" target="_blank"
-            rel="noopener noreferrer">adrian</a>.</span>
+        <b>made in The Philippines</b>
       </div>
     </footer>
 

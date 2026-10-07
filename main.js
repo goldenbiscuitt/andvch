@@ -47,37 +47,32 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
-// Preload all main page assets (images, videos, fonts) during the splash sequence
-function preloadMainPageAssets() {
-  if (document.fonts) {
-    document.fonts.ready.then(() => {
-      // Fonts warm-loaded
+// Viewport-aware video observer: stream & play videos only when near viewport
+function initVideoObserver() {
+  const videos = document.querySelectorAll('.project-grid video');
+  if (!videos.length) return;
+
+  if ('IntersectionObserver' in window) {
+    const videoObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const video = entry.target;
+        if (entry.isIntersecting) {
+          const playPromise = video.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(() => {});
+          }
+        } else {
+          video.pause();
+        }
+      });
+    }, { rootMargin: '150px 0px', threshold: 0.05 });
+
+    videos.forEach(video => videoObserver.observe(video));
+  } else {
+    videos.forEach(video => {
+      video.play().catch(() => {});
     });
   }
-
-  // Preload all document images
-  const images = document.querySelectorAll('img[src]');
-  images.forEach(img => {
-    const src = img.getAttribute('src');
-    if (src) {
-      const pImg = new Image();
-      pImg.src = src;
-    }
-  });
-
-  // Preload background images
-  const bgUrls = ['assets/img/play_bg.png'];
-  bgUrls.forEach(url => {
-    const pImg = new Image();
-    pImg.src = url;
-  });
-
-  // Preload and buffer all inline videos
-  const videos = document.querySelectorAll('video[src]');
-  videos.forEach(video => {
-    video.preload = 'auto';
-    video.load();
-  });
 }
 
 // Splash Screen Controller
@@ -100,8 +95,8 @@ if (splashScreen) {
       localStorage.setItem('intro_shown', 'true');
     } catch (err) {}
 
-    // Preload all page assets immediately while intro animation plays
-    preloadMainPageAssets();
+    // Initialize viewport-based video observer
+    initVideoObserver();
 
     // Prevent browser from restoring scroll position on reload
     if ('scrollRestoration' in history) {
@@ -156,7 +151,7 @@ if (splashScreen) {
     }, 3200); // 3.2 seconds
   } else {
     // Skip intro animation when intro has already been shown and not hard refreshed
-    preloadMainPageAssets();
+    initVideoObserver();
     document.body.classList.remove('splash-active');
     document.body.classList.add('splash-revealed');
     splashScreen.style.display = 'none';
@@ -828,7 +823,7 @@ function updateCursorTextMode(target) {
   if (!customCursor || customCursor.classList.contains('card-mode')) return;
 
   // Exclude magnetic elements and their children from drawing text cursor
-  const inMagneticElement = target.closest('.interaction-card, .magnetic-link');
+  const inMagneticElement = target.closest('.interaction-card, .magnetic-link, .speak-item, .card-container');
   if (inMagneticElement) {
     customCursor.classList.remove('text-mode');
     customCursor.style.height = '';
@@ -1033,8 +1028,63 @@ function initMagneticCard(card) {
   });
 }
 
+function initSpeakItem(speakItem) {
+  if (speakItem._hasMagneticInit) return;
+  speakItem._hasMagneticInit = true;
+
+  const card = speakItem.querySelector('.interaction-card.speak-card');
+  if (!card) return;
+
+  let rect, centerX, centerY;
+
+  speakItem.addEventListener('mouseenter', (e) => {
+    absorbCursor(card, e.clientX, e.clientY);
+    speakItem.classList.add('is-absorbed');
+    rect = card.getBoundingClientRect();
+    centerX = rect.left + rect.width / 2;
+    centerY = rect.top + rect.height / 2;
+  });
+
+  speakItem.addEventListener('mousemove', (e) => {
+    if (activeCard !== card) return;
+
+    rect = card.getBoundingClientRect();
+    centerX = rect.left + rect.width / 2;
+    centerY = rect.top + rect.height / 2;
+
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+
+    // Clamp drag distance relative to card bounds so icon movement remains proportional
+    const xDist = Math.max(-rect.width, Math.min(rect.width, mouseX - centerX));
+    const yDist = Math.max(-rect.height, Math.min(rect.height, mouseY - centerY));
+
+    card.style.transform = 'translate(0px, 0px)';
+
+    if (customCursor && customCursor.classList.contains('card-mode')) {
+      customCursor.style.transform = `translate(${centerX}px, ${centerY}px) translate(-50%, -50%)`;
+    }
+
+    const innerMoveX = xDist * 0.10;
+    const innerMoveY = yDist * 0.10;
+    const innerElements = getInnerMagneticElements(card);
+    innerElements.forEach(el => {
+      el.style.transform = `translate(${innerMoveX}px, ${innerMoveY}px)`;
+    });
+  });
+
+  speakItem.addEventListener('mouseleave', (e) => {
+    if (activeCard === card) {
+      activeCard = null;
+    }
+    speakItem.classList.remove('is-absorbed');
+    resetActiveCard(card, e.clientX, e.clientY);
+  });
+}
+
 function initMagneticListeners(parent = document) {
-  parent.querySelectorAll('.interaction-card, .magnetic-link').forEach(initMagneticCard);
+  parent.querySelectorAll('.interaction-card:not(.speak-card), .magnetic-link').forEach(initMagneticCard);
+  parent.querySelectorAll('.speak-item').forEach(initSpeakItem);
 }
 
 // Initial setup
@@ -1049,7 +1099,8 @@ window.addEventListener('scroll', () => {
     isScrollingCursorCheck = false;
     if (lastMouseX === undefined || lastMouseY === undefined) return;
     const element = document.elementFromPoint(lastMouseX, lastMouseY);
-    const cardUnderMouse = element ? element.closest('.interaction-card, .magnetic-link') : null;
+    const itemUnderMouse = element ? element.closest('.interaction-card, .magnetic-link, .speak-item') : null;
+    const cardUnderMouse = itemUnderMouse ? (itemUnderMouse.classList.contains('speak-item') ? itemUnderMouse.querySelector('.speak-card') : itemUnderMouse) : null;
 
     if (cardUnderMouse) {
       if (cardUnderMouse === activeCard) {
@@ -1338,6 +1389,10 @@ document.querySelectorAll('img, a').forEach(el => {
 
 // Draft overlay logic for Write cards
 document.querySelectorAll('.write-card').forEach(card => {
+  const href = card.getAttribute('href');
+  const isDraft = !href || href === '#' || href.trim() === '';
+  if (!isDraft) return;
+
   const overlay = document.createElement('div');
   overlay.className = 'draft-overlay';
   overlay.innerHTML = `<span class="draft-text">still in draft</span>`;
