@@ -144,6 +144,7 @@ export default {
               <div class="carousel-item"><img src="assets/img/companies/smartct.jpg" alt="SmartCT" class="carousel-logo-img logo-img-rounded" /></div>
               <div class="carousel-item"><img src="assets/img/companies/fcraft.png" alt="FutureCraft" class="carousel-logo-img" /></div>
               <div class="carousel-item"><img src="assets/img/companies/aseanfoundation.png" alt="ASEAN Foundation" class="carousel-logo-img" /></div>
+              <div class="carousel-item"><img src="assets/img/companies/buildnaturally.webp" alt="Build Naturally" class="carousel-logo-img" /></div>
 
               <!-- Set 2 (Duplicate for Seamless Infinite Loop) -->
               <div class="carousel-item"><img src="assets/img/companies/untv.png" alt="UNTV" class="carousel-logo-img" /></div>
@@ -153,6 +154,7 @@ export default {
               <div class="carousel-item"><img src="assets/img/companies/smartct.jpg" alt="SmartCT" class="carousel-logo-img logo-img-rounded" /></div>
               <div class="carousel-item"><img src="assets/img/companies/fcraft.png" alt="FutureCraft" class="carousel-logo-img" /></div>
               <div class="carousel-item"><img src="assets/img/companies/aseanfoundation.png" alt="ASEAN Foundation" class="carousel-logo-img" /></div>
+              <div class="carousel-item"><img src="assets/img/companies/buildnaturally.webp" alt="Build Naturally" class="carousel-logo-img" /></div>
             </div>
           </div>
         </div>
@@ -385,8 +387,9 @@ export default {
               <div class="cert-footer-group">
                 <span class="cert-issued-date">Issued Jun 2026</span>
                 <a href="https://www.coursera.org/account/accomplishments/specialization/4GGLTMDPLXA6" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link">
-                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" style="stroke: #ffffff !important; fill: none !important; position: relative !important; z-index: 101 !important;">
-                    <path d="M4 20 L20 4 M12 4 L20 4 L20 12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
                   </svg>
                   <span class="cert-tooltip">Verify</span>
                 </a>
@@ -404,8 +407,9 @@ export default {
               <div class="cert-footer-group">
                 <span class="cert-issued-date">Issued Oct 2025 · Expires Oct 2028</span>
                 <a href="https://edu.google.accredible.com/d750fc05-8e13-43fb-85d8-971972d0ad6d#acc.mvKWkVJl" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link">
-                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" style="stroke: #ffffff !important; fill: none !important; position: relative !important; z-index: 101 !important;">
-                    <path d="M4 20 L20 4 M12 4 L20 4 L20 12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
                   </svg>
                   <span class="cert-tooltip">Verify</span>
                 </a>
@@ -423,8 +427,9 @@ export default {
               <div class="cert-footer-group">
                 <span class="cert-issued-date">Issued Oct 2025</span>
                 <a href="https://edu.exceedlms.com/student/award/kJuEUoumq6rheCNjJLfKXVHK" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link">
-                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" style="stroke: #ffffff !important; fill: none !important; position: relative !important; z-index: 101 !important;">
-                    <path d="M4 20 L20 4 M12 4 L20 4 L20 12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
                   </svg>
                   <span class="cert-tooltip">Verify</span>
                 </a>
@@ -442,8 +447,9 @@ export default {
               <div class="cert-footer-group">
                 <span class="cert-issued-date">Issued Aug 2025</span>
                 <a href="https://cert.vjal.ai/certificate/?uid=6304580921322988920" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link">
-                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" style="stroke: #ffffff !important; fill: none !important; position: relative !important; z-index: 101 !important;">
-                    <path d="M4 20 L20 4 M12 4 L20 4 L20 12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
                   </svg>
                   <span class="cert-tooltip">Verify</span>
                 </a>
@@ -469,8 +475,9 @@ export default {
               <div class="cert-footer-group">
                 <span class="cert-issued-date">Issued Feb 2026</span>
                 <a href="https://www.coursera.org/account/accomplishments/verify/PK1V3DOUXCYR" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link">
-                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" style="stroke: #ffffff !important; fill: none !important; position: relative !important; z-index: 101 !important;">
-                    <path d="M4 20 L20 4 M12 4 L20 4 L20 12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
                   </svg>
                   <span class="cert-tooltip">Verify</span>
                 </a>
@@ -488,8 +495,9 @@ export default {
               <div class="cert-footer-group">
                 <span class="cert-issued-date">Issued Feb 2026</span>
                 <a href="https://www.coursera.org/account/accomplishments/verify/XW9RRTXTVDA2" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link">
-                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" style="stroke: #ffffff !important; fill: none !important; position: relative !important; z-index: 101 !important;">
-                    <path d="M4 20 L20 4 M12 4 L20 4 L20 12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
                   </svg>
                   <span class="cert-tooltip">Verify</span>
                 </a>
@@ -515,8 +523,9 @@ export default {
               <div class="cert-footer-group">
                 <span class="cert-issued-date">Issued Feb 2026</span>
                 <a href="https://www.coursera.org/account/accomplishments/specialization/KUM9MPA9841S" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link">
-                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" style="stroke: #ffffff !important; fill: none !important; position: relative !important; z-index: 101 !important;">
-                    <path d="M4 20 L20 4 M12 4 L20 4 L20 12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                    <polyline points="7 7 17 7 17 17"></polyline>
                   </svg>
                   <span class="cert-tooltip">Verify</span>
                 </a>

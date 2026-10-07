@@ -4,7 +4,7 @@ export default {
   description: 'Sharing my absolute favorite desktop and mobile backdrop, along with high-res download options and a preview of an upcoming interactive, canvas-driven generative wallpaper generation page.',
   visuals: `
     <div class="project-visual p-vis-wallpaper-1">
-      <img src="assets/img/fav_wallpaper.png" alt="Favorite Wallpaper" class="wallpaper-large-img" draggable="false">
+      <img src="assets/img/fav_wallpaper.webp" alt="Favorite Wallpaper" class="wallpaper-large-img" loading="lazy" draggable="false">
     </div>
     <div class="project-visual p-vis-wallpaper-2">
       <div class="p-details-box">

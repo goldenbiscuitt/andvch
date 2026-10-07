@@ -12,9 +12,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Fonts: Space Mono for titles, Inter for body text -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-      rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    </noscript>
     <link rel="stylesheet" href="style.css" />
     <script>
       (function() {
@@ -27,7 +29,7 @@
         } catch (e) {}
       })();
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
   </head>
 
   <body class="splash-active">
@@ -186,35 +188,38 @@
             <div class="wish-content">
               <img
                 src="https://cdn.prod.website-files.com/66e1987f36e4944240bc5ab8/6701637328a69477c92c2652_Wish-Logo.svg"
-                alt="Wish 107.5 Logo" class="wish-logo-img" draggable="false">
+                alt="Wish 107.5 Logo" class="wish-logo-img" width="180" height="auto" loading="lazy" draggable="false">
             </div>
           </div>
           <!-- Item 2: orb -->
           <div class="dense-card c-orb span-1c span-1r non-clickable" data-project-id="orb">
-            <img src="assets/img/earth_wallpaper.jpg" alt="Orb Experiments" class="c-orb-img" draggable="false">
+            <img src="assets/img/earth_wallpaper.webp" alt="Orb Experiments" class="c-orb-img" loading="lazy" width="642" height="1389" draggable="false">
           </div>
           <!-- Item 3: Medium (Attribution: Originally by Adrian Zumbrunnen https://azumbrunnen.me/) -->
           <div class="dense-card c-medium span-1c span-1r non-clickable no-hover" data-project-id="medium">
-            <img src="assets/img/item_3.png" alt="Medium 12 DP Grid" class="c-medium-img" draggable="false">
+            <img src="assets/img/item_3.png" alt="Medium 12 DP Grid" class="c-medium-img" loading="lazy" draggable="false">
           </div>
           <!-- Item 4: e -->
           <div class="dense-card c-e span-1c span-1r non-clickable no-hover" data-project-id="e">
-            <video src="assets/img/apple.webm" autoplay loop muted playsinline class="e-video" draggable="false"></video>
+            <video preload="none" muted loop playsinline class="e-video" draggable="false">
+              <source src="assets/img/apple.webm" type="video/webm">
+            </video>
           </div>
           <!-- Item 5: Favorite Wallpaper -->
           <div class="dense-card c-wallpaper span-1c span-2r" data-project-id="wallpaper">
-            <img src="assets/img/fav_wallpaper.png" alt="Favorite Wallpaper" class="wallpaper-img" draggable="false">
+            <img src="assets/img/fav_wallpaper.webp" alt="Favorite Wallpaper" class="wallpaper-img" loading="lazy" width="864" height="486" draggable="false">
           </div>
 
           <!-- Row 2 -->
           <!-- Item 6: Map Project -->
           <div class="dense-card c-directory-app span-1c span-2r" data-project-id="directory-app">
-            <img src="assets/img/directory-app/item_6_cover.png" alt="Map Project" class="directory-app-img" draggable="false">
+            <img src="assets/img/directory-app/item_6_cover.webp" alt="Map Project" class="directory-app-img" loading="lazy" width="540" height="1104" draggable="false">
           </div>
           <!-- Item 7: Car (Attribution: Originally by Adrian Zumbrunnen https://azumbrunnen.me/) -->
           <div class="dense-card c-car span-1c span-1r non-clickable" data-project-id="car">
-            <video src="assets/img/directory-app/time_experiment.webm" autoplay loop muted playsinline class="car-video"
-              draggable="false"></video>
+            <video preload="none" muted loop playsinline class="car-video" draggable="false">
+              <source src="assets/img/directory-app/time_experiment.webm" type="video/webm">
+            </video>
           </div>
           <!-- Item 8: Dark Gradient / ANDVCH -->
           <div class="dense-card c-grad span-2c span-2r" data-project-id="andvch">
@@ -240,28 +245,31 @@
           </div>
           <!-- Item 9: Voice -->
           <div class="dense-card c-voice span-1c span-1r" data-project-id="voice">
-            <img src="assets/img/pinassalin/pinassalin_logo.png" alt="FSL Translator" class="c-voice-img" draggable="false">
+            <img src="assets/img/pinassalin/pinassalin_logo.webp" alt="FSL Translator" class="c-voice-img" loading="lazy" draggable="false">
           </div>
 
           <!-- Row 3 -->
           <!-- Item 10: G (Attribution: Originally by Adrian Zumbrunnen https://azumbrunnen.me/) -->
           <div class="dense-card c-g span-1c span-1r" data-project-id="g">
-            <img src="assets/img/googlecloth.jpg" alt="Google Cloth" class="c-g-img" draggable="false">
+            <img src="assets/img/googlecloth.jpg" alt="Google Cloth" class="c-g-img" loading="lazy" draggable="false">
           </div>
           <!-- Item 11: Ambient (Attribution: Originally by Adrian Zumbrunnen https://azumbrunnen.me/) -->
           <div class="dense-card c-ambient span-1c span-1r non-clickable no-hover" data-project-id="ambient">
-            <video src="assets/img/ambient.c1027bf9.webm" autoplay loop muted playsinline class="ambient-video"
-              draggable="false"></video>
+            <video preload="none" muted loop playsinline class="ambient-video" draggable="false">
+              <source src="assets/img/ambient.c1027bf9.webm" type="video/webm">
+            </video>
           </div>
           <!-- Item 12: Yellow Box (Attribution: Originally by Adrian Zumbrunnen https://azumbrunnen.me/) -->
           <div class="dense-card c-yellow span-1c span-1r non-clickable no-hover" data-project-id="yellow">
-            <img src="assets/img/one.png" alt="Yellow Box Study" class="c-yellow-img" draggable="false">
+            <img src="assets/img/one.png" alt="Yellow Box Study" class="c-yellow-img" loading="lazy" draggable="false">
           </div>
 
           <!-- Row 4 -->
           <!-- Item 13: M (Attribution: Originally by Adrian Zumbrunnen https://azumbrunnen.me/) -->
           <div class="dense-card c-m span-1c span-1r non-clickable" data-project-id="m">
-            <video src="assets/img/mindful_2.webm" autoplay loop muted playsinline class="m-video" draggable="false"></video>
+            <video preload="none" muted loop playsinline class="m-video" draggable="false">
+              <source src="assets/img/mindful_2.webm" type="video/webm">
+            </video>
           </div>
           <!-- Item 14: 23 -->
           <div class="dense-card c-32 span-1c span-1r non-clickable no-hover" data-project-id="32">
@@ -280,12 +288,13 @@
 
           <!-- Item 16: Green Aurora -->
           <div class="dense-card c-green span-1c span-1r non-clickable" data-project-id="green">
-            <video src="assets/img/watch.webm" autoplay loop muted playsinline class="green-video" draggable="false"></video>
+            <video preload="none" muted loop playsinline class="green-video" draggable="false">
+              <source src="assets/img/watch.webm" type="video/webm">
+            </video>
           </div>
           <!-- Item 15: Watch -->
           <div class="dense-card c-watch span-2c span-1r non-clickable" data-project-id="watch">
-            <img src="assets/img/AI_Personal_Contextualization.jpg" alt="AI Personal Contextualization" class="watch-img"
-              draggable="false">
+            <img src="assets/img/AI_Personal_Contextualization.webp" alt="AI Personal Contextualization" class="watch-img" loading="lazy" draggable="false">
           </div>
           <!-- Item 17: PesoOS -->
           <div class="dense-card c-smart span-1c span-1r non-clickable" data-project-id="smart">
@@ -314,38 +323,38 @@
           <!-- Write -->
           <section class="list-section">
             <h2 class="section-title"><b>Write</b></h2>
-            <h1 class="section-description">
+            <p class="section-description">
               I used to keep my thoughts locked in ink and paper, but I’ve learned that ideas breathe better when shared
               in the open. I hope these glimpses into my process resonate with you; here are some of my work.
-            </h1>
+            </p>
             <div class="card-grid">
               <div class="card-container">
                 <a href="#" class="interaction-card write-card"><span class="absorbed-card"></span>
                   <div class="card-icon-wrapper">
-                    <div class="card-icon"><img src="assets/img/card_icon_1.png" alt="Designing for AI Icon" class="card-icon-img"
+                    <div class="card-icon"><img src="assets/img/card_icon_1.png" alt="Designing for AI Icon" class="card-icon-img" loading="lazy"
                         draggable="false"></div>
                   </div>
                 </a>
-                <h1 class="section-description card-caption">Designing for AI</h1>
+                <h3 class="section-description card-caption">Designing for AI</h3>
               </div>
               <div class="card-container">
                 <a href="#" class="interaction-card write-card"><span class="absorbed-card"></span>
                   <div class="card-icon-wrapper">
                     <div class="card-icon"><img src="assets/img/card_icon_2.png" alt="The Future of Human Interfaces Icon"
-                        class="card-icon-img" draggable="false"></div>
+                        class="card-icon-img" loading="lazy" draggable="false"></div>
                   </div>
                 </a>
-                <h1 class="section-description card-caption">The Future of Human Interfaces</h1>
+                <h3 class="section-description card-caption">The Future of Human Interfaces</h3>
               </div>
               <div class="card-container">
                 <a href="https://medium.com/@andvch/minimalism-in-web-dev-0fecb6fbca2e?sharedUserId=andvch" target="_blank"
                   rel="noopener noreferrer" class="interaction-card write-card"><span class="absorbed-card"></span>
                   <div class="card-icon-wrapper">
-                    <div class="card-icon"><img src="assets/img/card_icon_3.png" alt="Minimalism in Web Dev Icon" class="card-icon-img"
+                    <div class="card-icon"><img src="assets/img/card_icon_3.png" alt="Minimalism in Web Dev Icon" class="card-icon-img" loading="lazy"
                         draggable="false"></div>
                   </div>
                 </a>
-                <h1 class="section-description card-caption">Minimalism in Web Dev</h1>
+                <h3 class="section-description card-caption">Minimalism in Web Dev</h3>
               </div>
             </div>
 
@@ -368,30 +377,30 @@
           <!-- Play -->
           <section class="list-section play-section">
             <h2 class="section-title"><b>Play</b></h2>
-            <h1 class="section-description play-desc">
+            <p class="section-description play-desc">
               I learned from a book, that incorporating "play" tends to give you better perpectives, especially in the
               creative, and most technical expertise, I am practicing this in all of my projects and my work on AI Based
               Systems.
-              </h1>
-              <div class="play-actions">
-                <a href="#explore" class="explore-btn magnetic-link">
-                  <span class="btn-bg"></span>
-                  <span class="absorbed-pill"></span>
-                  <span class="btn-content">
-                    <span class="btn-arrow">&rarr;</span> <span class="btn-text">explore</span>
-                  </span>
-                </a>
-              </div>
-              </section>
+            </p>
+            <div class="play-actions">
+              <a href="#explore" class="explore-btn magnetic-link">
+                <span class="btn-bg"></span>
+                <span class="absorbed-pill"></span>
+                <span class="btn-content">
+                  <span class="btn-arrow">&rarr;</span> <span class="btn-text">explore</span>
+                </span>
+              </a>
+            </div>
+          </section>
 
           <!-- Speak -->
           <section class="list-section">
             <h2 class="section-title"><b>Speak</b></h2>
-            <h1 class="section-description">
+            <p class="section-description">
               I'm passionate about learning, and sharing these knowledge with new people. I've had the opportunity to
               share ideas
               at various events in the Philippines, and hopefully around the globe.
-            </h1>
+            </p>
             <div class="speak-grid">
               <!-- Item 1 -->
               <a href="https://www.facebook.com/share/r/1AtrRm53Ps/" class="speak-item" style="text-decoration: none;" target="_blank"
@@ -515,9 +524,7 @@
         </div>
       </div>
       <div class="footer-credit">
-        <b>made in The Philippines</b> <br>
-        <span class="disclaimer">referenced to the portfolio of <a href="https://azumbrunnen.me/" target="_blank"
-            rel="noopener noreferrer">adrian</a>.</span>
+        <b>made in The Philippines</b>
       </div>
     </footer>
 
