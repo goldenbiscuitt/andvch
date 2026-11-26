@@ -5,9 +5,9 @@ export default {
   description: 'Redesigning the visual and interactive identity of Wish 107.5 Mobile App. Bringing high-fidelity live audio broadcasts together with modern interfaces.',
   visuals: `
     <div class="project-visual p-vis-wish-mocks">
-      <img src="assets/img/wish_project/wish_mock_1.png" alt="Wish Mock 1" class="mobile-mock-reveal" draggable="false">
-      <img src="assets/img/wish_project/wish_mock_2.png" alt="Wish Mock 2" class="mobile-mock-reveal" draggable="false">
-      <img src="assets/img/wish_project/wish_mock_3.png" alt="Wish Mock 3" class="mobile-mock-reveal" draggable="false">
+      <img src="assets/img/wish_project/wish_mock_1.png" alt="Wish Mock 1" class="mobile-mock-reveal" loading="lazy" decoding="async" draggable="false">
+      <img src="assets/img/wish_project/wish_mock_2.png" alt="Wish Mock 2" class="mobile-mock-reveal" loading="lazy" decoding="async" draggable="false">
+      <img src="assets/img/wish_project/wish_mock_3.png" alt="Wish Mock 3" class="mobile-mock-reveal" loading="lazy" decoding="async" draggable="false">
     </div>
     <div class="project-visual p-vis-wish-3">
       <div class="p-details-box">

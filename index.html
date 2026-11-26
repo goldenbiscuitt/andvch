@@ -26,6 +26,10 @@
           if (introShown && !hardRefresh) {
             document.documentElement.classList.add('no-splash');
           }
+          var footerRevealed = localStorage.getItem('footer_revealed') === 'true';
+          if (footerRevealed && !hardRefresh) {
+            document.documentElement.classList.add('footer-already-revealed');
+          }
         } catch (e) {}
       })();
     </script>
@@ -153,7 +157,7 @@
 
     <main>
       <div class="container">
-        <section class="hero">
+        <section class="hero" id="hero">
           <h1 class="hero-title">
             <span id="greeting" class="greeting">bonjour.</span><br>
             i'm<br>
@@ -193,11 +197,11 @@
           </div>
           <!-- Item 2: orb -->
           <div class="dense-card c-orb span-1c span-1r non-clickable" data-project-id="orb">
-            <img src="assets/img/earth_wallpaper.webp" alt="Orb Experiments" class="c-orb-img" loading="lazy" width="642" height="1389" draggable="false">
+            <img src="assets/img/earth_wallpaper.webp" alt="Orb Experiments" class="c-orb-img" loading="lazy" decoding="async" width="642" height="1389" draggable="false">
           </div>
           <!-- Item 3: Medium (Attribution: Originally by Adrian Zumbrunnen https://azumbrunnen.me/) -->
           <div class="dense-card c-medium span-1c span-1r non-clickable no-hover" data-project-id="medium">
-            <img src="assets/img/item_3.png" alt="Medium 12 DP Grid" class="c-medium-img" loading="lazy" draggable="false">
+            <img src="assets/img/item_3.png" alt="Medium 12 DP Grid" class="c-medium-img" loading="lazy" decoding="async" draggable="false">
           </div>
           <!-- Item 4: e -->
           <div class="dense-card c-e span-1c span-1r non-clickable no-hover" data-project-id="e">
@@ -207,13 +211,13 @@
           </div>
           <!-- Item 5: Favorite Wallpaper -->
           <div class="dense-card c-wallpaper span-1c span-2r" data-project-id="wallpaper">
-            <img src="assets/img/fav_wallpaper.webp" alt="Favorite Wallpaper" class="wallpaper-img" loading="lazy" width="864" height="486" draggable="false">
+            <img src="assets/img/fav_wallpaper.webp" alt="Favorite Wallpaper" class="wallpaper-img" loading="lazy" decoding="async" width="864" height="486" draggable="false">
           </div>
 
           <!-- Row 2 -->
-          <!-- Item 6: Map Project -->
-          <div class="dense-card c-directory-app span-1c span-2r" data-project-id="directory-app">
-            <img src="assets/img/directory-app/item_6_cover.webp" alt="Map Project" class="directory-app-img" loading="lazy" width="540" height="1104" draggable="false">
+          <!-- Item 6: Trip Ko To -->
+          <div class="dense-card c-directory-app span-1c span-2r" data-project-id="trip-ko-to">
+            <img src="assets/img/directory-app/item_6_cover.webp" alt="Trip Ko To" class="directory-app-img" loading="lazy" decoding="async" width="540" height="1104" draggable="false">
           </div>
           <!-- Item 7: Car (Attribution: Originally by Adrian Zumbrunnen https://azumbrunnen.me/) -->
           <div class="dense-card c-car span-1c span-1r non-clickable" data-project-id="car">
@@ -245,13 +249,13 @@
           </div>
           <!-- Item 9: Voice -->
           <div class="dense-card c-voice span-1c span-1r" data-project-id="voice">
-            <img src="assets/img/pinassalin/pinassalin_logo.webp" alt="FSL Translator" class="c-voice-img" loading="lazy" draggable="false">
+            <img src="assets/img/pinassalin/pinassalin_logo.webp" alt="FSL Translator" class="c-voice-img" loading="lazy" decoding="async" draggable="false">
           </div>
 
           <!-- Row 3 -->
           <!-- Item 10: G (Attribution: Originally by Adrian Zumbrunnen https://azumbrunnen.me/) -->
           <div class="dense-card c-g span-1c span-1r" data-project-id="g">
-            <img src="assets/img/googlecloth.jpg" alt="Google Cloth" class="c-g-img" loading="lazy" draggable="false">
+            <img src="assets/img/googlecloth.jpg" alt="Google Cloth" class="c-g-img" loading="lazy" decoding="async" draggable="false">
           </div>
           <!-- Item 11: Ambient (Attribution: Originally by Adrian Zumbrunnen https://azumbrunnen.me/) -->
           <div class="dense-card c-ambient span-1c span-1r non-clickable no-hover" data-project-id="ambient">
@@ -259,9 +263,11 @@
               <source src="assets/img/ambient.c1027bf9.webm" type="video/webm">
             </video>
           </div>
-          <!-- Item 12: Yellow Box (Attribution: Originally by Adrian Zumbrunnen https://azumbrunnen.me/) -->
-          <div class="dense-card c-yellow span-1c span-1r non-clickable no-hover" data-project-id="yellow">
-            <img src="assets/img/one.png" alt="Yellow Box Study" class="c-yellow-img" loading="lazy" draggable="false">
+          <!-- Item 12: Build Naturally -->
+          <div class="dense-card c-buildnaturally span-1c span-1r" data-project-id="build-naturally">
+            <div class="bn-card-badge">
+              <img src="assets/img/buildnaturally.webp" alt="Build Naturally" class="bn-card-logo" loading="lazy" decoding="async" draggable="false">
+            </div>
           </div>
 
           <!-- Row 4 -->
@@ -294,7 +300,7 @@
           </div>
           <!-- Item 15: Watch -->
           <div class="dense-card c-watch span-2c span-1r non-clickable" data-project-id="watch">
-            <img src="assets/img/AI_Personal_Contextualization.webp" alt="AI Personal Contextualization" class="watch-img" loading="lazy" draggable="false">
+            <img src="assets/img/AI_Personal_Contextualization.webp" alt="AI Personal Contextualization" class="watch-img" loading="lazy" decoding="async" draggable="false">
           </div>
           <!-- Item 17: PesoOS -->
           <div class="dense-card c-smart span-1c span-1r non-clickable" data-project-id="smart">
@@ -394,7 +400,7 @@
           </section>
 
           <!-- Speak -->
-          <section class="list-section">
+          <section class="list-section speak-section" id="speak">
             <h2 class="section-title"><b>Speak</b></h2>
             <p class="section-description">
               I'm passionate about learning, and sharing these knowledge with new people. I've had the opportunity to
@@ -494,7 +500,7 @@
 
     <footer class="site-footer">
       <div class="footer-left-group">
-        <a href="#" class="back-to-top say-hi-btn social-link magnetic-link" aria-label="Back to top">
+        <a href="#hero" class="back-to-top say-hi-btn social-link magnetic-link" aria-label="Back to top">
           <span class="btn-bg"></span>
           <span class="btn-content">
             <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"

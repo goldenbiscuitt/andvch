@@ -2,6 +2,10 @@
 import { initChromaGame } from './projects/chromaGame.js';
 import { projects } from './projects/index.js';
 import { initTypeSpeedGame } from './projects/typeSpeedGame.js';
+import { initSmoothScroll, easings } from './smoothScroll.js';
+
+// Initialize Smooth Scroller with link easing across all pages
+const scroller = initSmoothScroll();
 
 // Console Easter Egg for inspect element visitors
 console.log(
@@ -14,7 +18,17 @@ console.log(
 );
 
 // Trigger page fade-in on load
+document.body.classList.remove('fade-out');
 document.body.classList.add('fade-in');
+
+// Restore page visibility when returning via browser/mouse Back-Forward cache (bfcache)
+window.addEventListener('pageshow', (e) => {
+  document.body.classList.remove('fade-out');
+  document.body.classList.add('fade-in');
+  if (e.persisted && scroller) {
+    scroller.syncPosition();
+  }
+});
 
 const navigateWithFade = (e, targetUrl) => {
   if (e && e.preventDefault) e.preventDefault();
@@ -43,31 +57,45 @@ window.addEventListener('keydown', (e) => {
     try {
       sessionStorage.setItem('hard_refresh_triggered', 'true');
       localStorage.removeItem('intro_shown');
+      localStorage.removeItem('footer_revealed');
     } catch (err) {}
   }
 });
 
-// Viewport-aware video observer: stream & play videos only when near viewport
+// Viewport-aware video & SVG animation observer: stream/play videos and run infinite SVG animations only when near viewport
 function initVideoObserver() {
   const videos = document.querySelectorAll('.project-grid video');
-  if (!videos.length) return;
+  const animatedCards = document.querySelectorAll('.dense-card.c-grad, .dense-card.c-smart');
+  if (!videos.length && !animatedCards.length) return;
 
   if ('IntersectionObserver' in window) {
-    const videoObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        const video = entry.target;
-        if (entry.isIntersecting) {
-          const playPromise = video.play();
-          if (playPromise !== undefined) {
-            playPromise.catch(() => {});
+    if (videos.length) {
+      const videoObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const video = entry.target;
+          if (entry.isIntersecting) {
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+              playPromise.catch(() => {});
+            }
+          } else {
+            video.pause();
           }
-        } else {
-          video.pause();
-        }
-      });
-    }, { rootMargin: '150px 0px', threshold: 0.05 });
+        });
+      }, { rootMargin: '150px 0px', threshold: 0.05 });
 
-    videos.forEach(video => videoObserver.observe(video));
+      videos.forEach(video => videoObserver.observe(video));
+    }
+
+    if (animatedCards.length) {
+      const animObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          entry.target.classList.toggle('animations-paused', !entry.isIntersecting);
+        });
+      }, { rootMargin: '100px 0px', threshold: 0.01 });
+
+      animatedCards.forEach(card => animObserver.observe(card));
+    }
   } else {
     videos.forEach(video => {
       video.play().catch(() => {});
@@ -83,6 +111,9 @@ let isHardRefresh = false;
 try {
   hasIntroBeenShown = localStorage.getItem('intro_shown') === 'true';
   isHardRefresh = sessionStorage.getItem('hard_refresh_triggered') === 'true';
+  if (isHardRefresh) {
+    localStorage.removeItem('footer_revealed');
+  }
   sessionStorage.removeItem('hard_refresh_triggered');
 } catch (err) {}
 
@@ -91,6 +122,7 @@ const shouldShowIntro = !hasIntroBeenShown || isHardRefresh;
 
 if (splashScreen) {
   if (shouldShowIntro) {
+    if (scroller) scroller.stop();
     try {
       localStorage.setItem('intro_shown', 'true');
     } catch (err) {}
@@ -119,34 +151,33 @@ if (splashScreen) {
       });
 
       const finalizeSplash = () => {
-        // Remove splash screen element from DOM so user CANNOT scroll back up to it
+        // Hide splash screen without removing from DOM so the element is preserved
         splashScreen.style.display = 'none';
-        splashScreen.remove();
         // Lock hero section as top of page (scrollTop = 0)
         window.scrollTo(0, 0);
+        if (scroller) {
+          scroller.syncPosition();
+          scroller.start();
+        }
       };
 
       if (prefersReducedMotion) {
         finalizeSplash();
       } else {
-        let finalized = false;
-        const handleScrollEnd = () => {
-          if (!finalized) {
-            finalized = true;
-            finalizeSplash();
-            window.removeEventListener('scrollend', handleScrollEnd);
-          }
-        };
-        window.addEventListener('scrollend', handleScrollEnd);
-
-        // Fallback timeout in case scrollend is unsupported or delayed
-        setTimeout(() => {
-          if (!finalized) {
-            finalized = true;
-            finalizeSplash();
-            window.removeEventListener('scrollend', handleScrollEnd);
-          }
-        }, 1200);
+        if (scroller) {
+          scroller.start();
+          scroller.scrollTo(window.innerHeight, {
+            duration: 1100,
+            easing: easings.easeInOutQuart,
+            onComplete: finalizeSplash
+          });
+        } else {
+          window.scrollTo({
+            top: window.innerHeight,
+            behavior: 'smooth'
+          });
+          setTimeout(finalizeSplash, 1100);
+        }
       }
     }, 3200); // 3.2 seconds
   } else {
@@ -155,8 +186,11 @@ if (splashScreen) {
     document.body.classList.remove('splash-active');
     document.body.classList.add('splash-revealed');
     splashScreen.style.display = 'none';
-    splashScreen.remove();
     window.scrollTo(0, 0);
+    if (scroller) {
+      scroller.syncPosition();
+      scroller.start();
+    }
   }
 }
 
@@ -239,7 +273,13 @@ denseCards.forEach(card => {
       card.classList.add('has-overlay');
       const overlay = document.createElement('div');
       overlay.className = 'card-overlay';
-      overlay.innerHTML = `<span class="overlay-text" style="text-transform: none;">Map Project</span>`;
+      overlay.innerHTML = `<span class="overlay-text" style="text-transform: none;">Trip Ko To</span>`;
+      card.appendChild(overlay);
+    } else if (card.classList.contains('c-buildnaturally')) {
+      card.classList.add('has-overlay');
+      const overlay = document.createElement('div');
+      overlay.className = 'card-overlay';
+      overlay.innerHTML = `<span class="overlay-text" style="text-transform: none;">Build Naturally</span>`;
       card.appendChild(overlay);
     } else if (card.classList.contains('c-m')) {
       card.classList.add('has-overlay');
@@ -325,8 +365,20 @@ if (projectTitleEl) {
     if (projectMainEl) projectMainEl.style.marginTop = '';
     if (currentProject.titleHtml) {
       projectTitleEl.innerHTML = currentProject.titleHtml;
+    } else if (currentProject.liveUrl && currentProject.title) {
+      const link = document.createElement('a');
+      link.href = currentProject.liveUrl;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.className = 'project-title-link';
+      link.textContent = currentProject.title;
+      projectTitleEl.textContent = '';
+      projectTitleEl.appendChild(link);
     } else {
       projectTitleEl.textContent = currentProject.title;
+    }
+    if (currentProject.title) {
+      document.title = `${currentProject.title} | Arian Dave`;
     }
     projectDescEl.textContent = currentProject.description;
   }
@@ -351,17 +403,18 @@ if (projectTitleEl) {
     const mocksContainer = projectVisualsContainer.querySelector('.p-vis-directory-mocks, .p-vis-wish-mocks');
     if (mocksContainer) {
       const mocks = mocksContainer.querySelectorAll('.mobile-mock-reveal');
+      let mocksRafId = null;
+      const lastProgress = new Array(mocks.length).fill(-1);
 
       const handleScrollReveal = () => {
         const isDesktop = window.innerWidth > 768;
+        const viewportHeight = window.innerHeight;
+        const maxScrollY = document.documentElement.scrollHeight - viewportHeight;
+        const scrollY = window.scrollY;
 
         if (isDesktop) {
           const rect = mocksContainer.getBoundingClientRect();
-          const elementTop = rect.top + window.scrollY;
-          const elementHeight = rect.height;
-          const viewportHeight = window.innerHeight;
-          const totalHeight = document.documentElement.scrollHeight;
-          const maxScrollY = totalHeight - viewportHeight;
+          const elementTop = rect.top + scrollY;
 
           // If the mockup container starts above the fold, animate from scroll 0 and complete early
           const startY = elementTop < viewportHeight ? 0 : elementTop - viewportHeight;
@@ -369,12 +422,7 @@ if (projectTitleEl) {
             ? Math.max(startY + 10, Math.min(maxScrollY, elementTop - viewportHeight * 0.2))
             : maxScrollY;
 
-          let progress = 0;
-          if (endY > startY) {
-            progress = (window.scrollY - startY) / (endY - startY);
-          } else {
-            progress = 1;
-          }
+          let progress = endY > startY ? (scrollY - startY) / (endY - startY) : 1;
           progress = Math.max(0, Math.min(1, progress));
 
           // Stagger ranges:
@@ -382,7 +430,7 @@ if (projectTitleEl) {
           // Mock 2: 0.2 -> 0.8
           // Mock 3: 0.4 -> 1.0
           mocks.forEach((mock, index) => {
-            const startRange = 0.0 + index * 0.2;
+            const startRange = index * 0.2;
             const endRange = 0.6 + index * 0.2;
 
             let p = 0;
@@ -394,34 +442,41 @@ if (projectTitleEl) {
               p = (progress - startRange) / (endRange - startRange);
             }
 
-            mock.style.opacity = p;
-            mock.style.transform = `translateX(${(1 - p) * -30}px)`;
+            if (Math.abs(p - lastProgress[index]) > 0.001) {
+              lastProgress[index] = p;
+              mock.style.opacity = p;
+              mock.style.transform = `translate3d(${((1 - p) * -30).toFixed(2)}px, 0, 0)`;
+            }
           });
         } else {
           // Mobile: animate each mockup individually based on its own scroll position
-          mocks.forEach((mock) => {
+          mocks.forEach((mock, index) => {
             const rect = mock.getBoundingClientRect();
-            const elementTop = rect.top + window.scrollY;
+            const elementTop = rect.top + scrollY;
             const elementHeight = rect.height;
-            const viewportHeight = window.innerHeight;
-            const totalHeight = document.documentElement.scrollHeight;
-            const maxScrollY = totalHeight - viewportHeight;
 
             const startY = elementTop < viewportHeight ? 0 : elementTop - viewportHeight;
             const endY = elementTop < viewportHeight
               ? Math.max(startY + 10, Math.min(maxScrollY, elementTop + elementHeight - viewportHeight * 0.3))
               : Math.min(maxScrollY, elementTop + elementHeight - viewportHeight * 0.3);
 
-            let progress = 0;
-            if (endY > startY) {
-              progress = (window.scrollY - startY) / (endY - startY);
-            } else {
-              progress = 1;
-            }
+            let progress = endY > startY ? (scrollY - startY) / (endY - startY) : 1;
             progress = Math.max(0, Math.min(1, progress));
 
-            mock.style.opacity = progress;
-            mock.style.transform = `translateX(${(1 - progress) * -30}px)`;
+            if (Math.abs(progress - lastProgress[index]) > 0.001) {
+              lastProgress[index] = progress;
+              mock.style.opacity = progress;
+              mock.style.transform = `translate3d(${((1 - progress) * -30).toFixed(2)}px, 0, 0)`;
+            }
+          });
+        }
+      };
+
+      const scheduleScrollReveal = () => {
+        if (mocksRafId === null) {
+          mocksRafId = requestAnimationFrame(() => {
+            mocksRafId = null;
+            handleScrollReveal();
           });
         }
       };
@@ -430,8 +485,130 @@ if (projectTitleEl) {
       handleScrollReveal();
 
       // Listen to scroll and resize events
-      window.addEventListener('scroll', handleScrollReveal, { passive: true });
-      window.addEventListener('resize', handleScrollReveal, { passive: true });
+      window.addEventListener('scroll', scheduleScrollReveal, { passive: true });
+      window.addEventListener('resize', scheduleScrollReveal, { passive: true });
+    }
+
+    // MacBook dynamic 3D opening scroll animation for Directory App
+    const macbookTrack = projectVisualsContainer.querySelector('.macbook-scroll-track');
+    if (macbookTrack) {
+      const rig = macbookTrack.querySelector('#macbook-rig');
+      const lid = macbookTrack.querySelector('#macbook-lid');
+      const sleepLayer = macbookTrack.querySelector('#macbook-sleep');
+      const glare = macbookTrack.querySelector('#macbook-glare');
+      const prevBtn = macbookTrack.querySelector('#macbook-prev-btn');
+      const nextBtn = macbookTrack.querySelector('#macbook-next-btn');
+      const screenImg = macbookTrack.querySelector('.macbook-screen-img');
+
+      // Left / Right chevron screen switcher
+      const macbookScreens = [
+        'assets/img/tripkoto/tripkoto_itinerary.webp',
+        'assets/img/tripkoto/tripkoto_home.webp',
+        'assets/img/tripkoto/tripkoto_place.webp'
+      ];
+      let currentScreenIdx = 0;
+
+      const switchMacbookScreen = (delta) => {
+        if (!screenImg) return;
+        currentScreenIdx = (currentScreenIdx + delta + macbookScreens.length) % macbookScreens.length;
+        const newSrc = macbookScreens[currentScreenIdx];
+        if (screenImg.getAttribute('src') !== newSrc) {
+          screenImg.style.opacity = '0.2';
+          setTimeout(() => {
+            screenImg.src = newSrc;
+            screenImg.style.opacity = '1';
+          }, 150);
+        }
+      };
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          switchMacbookScreen(-1);
+        });
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          switchMacbookScreen(1);
+        });
+      }
+
+      let rafId = null;
+      let lastMacbookProgress = -1;
+      let chevronsVisible = false;
+
+      const handleMacbookScroll = () => {
+        const rect = macbookTrack.getBoundingClientRect();
+        const trackHeight = rect.height;
+        const viewportHeight = window.innerHeight;
+        const totalDistance = trackHeight - viewportHeight;
+
+        if (totalDistance <= 0) return;
+
+        // Calculate progress from 0 (closed) to 1 (fully open)
+        let progress = -rect.top / totalDistance;
+        progress = Math.max(0, Math.min(1, progress));
+
+        // Skip redundant style writes when outside active scroll track
+        if (Math.abs(progress - lastMacbookProgress) < 0.0005) return;
+        lastMacbookProgress = progress;
+
+        // Smooth cubic-like easing
+        const eased = progress < 0.5 
+          ? 2 * progress * progress 
+          : -1 + (4 - 2 * progress) * progress;
+
+        // End pose: scenePitch (78deg) + lidAngle (102deg) = 180deg
+        // This makes the Retina display 100% straight/vertical facing the viewer,
+        // while the keyboard deck recedes at a low-angle front-bottom perspective (not shown whole).
+        const lidAngle = eased * 102;
+        const scenePitch = 62 + eased * 16; // 62deg (closed resting) -> 78deg (low-angle front deck)
+        const transYPct = 4 + eased * 38;   // 4% -> 42% keeps full top bezel in frame & keyboard peeking at bottom
+        const rigScale = 0.94 + eased * 0.06; // Subtle dolly-in from 0.94 -> 1.00
+
+        if (rig) {
+          rig.style.transform = `translate3d(0, ${transYPct.toFixed(2)}%, 0) scale(${rigScale.toFixed(3)}) rotateX(${scenePitch.toFixed(2)}deg) rotateY(0deg)`;
+        }
+        if (lid) {
+          lid.style.setProperty('--lid-angle', `${lidAngle.toFixed(2)}deg`);
+        }
+
+        // Screen wake / sleep transition
+        if (sleepLayer) {
+          const wake = Math.min(1, Math.max(0, (progress - 0.08) / 0.3));
+          sleepLayer.style.opacity = (1 - wake).toFixed(3);
+        }
+
+        // Screen glare sheen
+        if (glare) {
+          const glareY = -60 + eased * 110;
+          const glareOpacity = 0.05 + (1 - Math.abs(progress - 0.65)) * 0.22;
+          glare.style.transform = `translate3d(0, ${glareY.toFixed(1)}%, 0) rotate(15deg)`;
+          glare.style.opacity = glareOpacity.toFixed(3);
+        }
+
+        // Reveal left/right chevrons once MacBook is open
+        const shouldShowChevrons = progress >= 0.82;
+        if (shouldShowChevrons !== chevronsVisible) {
+          chevronsVisible = shouldShowChevrons;
+          if (prevBtn) prevBtn.classList.toggle('is-visible', shouldShowChevrons);
+          if (nextBtn) nextBtn.classList.toggle('is-visible', shouldShowChevrons);
+        }
+      };
+
+      const requestMacbookTick = () => {
+        if (!rafId) {
+          rafId = requestAnimationFrame(() => {
+            handleMacbookScroll();
+            rafId = null;
+          });
+        }
+      };
+
+      handleMacbookScroll();
+      window.addEventListener('scroll', requestMacbookTick, { passive: true });
+      window.addEventListener('resize', requestMacbookTick, { passive: true });
     }
 
     // Wish logo side-by-side scroll reveal animation
@@ -570,6 +747,10 @@ if (projectTitleEl) {
 
       const unlockScroll = () => {
         isLocked = false;
+        if (scroller) {
+          scroller.syncPosition();
+          scroller.start();
+        }
         window.removeEventListener('wheel', handleWheel);
         window.removeEventListener('touchstart', handleTouchStart);
         window.removeEventListener('touchmove', handleTouchMove);
@@ -616,6 +797,7 @@ if (projectTitleEl) {
           if (currentScrollY >= middleScrollY && !animationFinished) {
             if (!isLocked) {
               isLocked = true;
+              if (scroller) scroller.stop();
               window.scrollTo({
                 top: middleScrollY,
                 behavior: 'smooth'
@@ -661,17 +843,27 @@ if (projectTitleEl) {
       updateShiftX();
       handleWishLogoReveal();
 
+      let wishRafId = null;
+      const scheduleWishLogoReveal = () => {
+        if (wishRafId === null) {
+          wishRafId = requestAnimationFrame(() => {
+            wishRafId = null;
+            handleWishLogoReveal();
+          });
+        }
+      };
+
       // Listen to scroll and resize events
-      window.addEventListener('scroll', handleWishLogoReveal, { passive: true });
+      window.addEventListener('scroll', scheduleWishLogoReveal, { passive: true });
       window.addEventListener('resize', () => {
         updateShiftX();
-        handleWishLogoReveal();
+        scheduleWishLogoReveal();
       }, { passive: true });
     }
   }
 
   // Set up pagination (looping, skipping non-clickable projects)
-  const nonClickableProjectIds = ['orb', 'medium', 'e', 'grad', 'g', 'ambient', '32', 'watch', 'smart', 'car', 'm', 'yellow', 'green'];
+  const nonClickableProjectIds = ['orb', 'medium', 'e', 'grad', 'g', 'ambient', '32', 'watch', 'smart', 'car', 'm', 'green'];
   const clickableProjects = projects.filter(p => !nonClickableProjectIds.includes(p.id));
 
   let clickableIndex = clickableProjects.findIndex(p => p.id === currentProject.id);
@@ -707,20 +899,24 @@ if (projectTitleEl) {
   const projectHeader = document.querySelector('.project-header');
 
   if (projectHeader) {
-    const handleHeaderVisibility = () => {
-      const currentScrollY = window.scrollY;
+    // Start hidden on load so initial reveal plays the exact left-to-right staggered fade-in
+    projectHeader.classList.add('header-hidden');
+    let isHeaderHidden = true;
 
-      // If at the very top, keep header visible
-      if (currentScrollY <= 0) {
-        projectHeader.classList.remove('header-hidden');
-      } else {
-        // Otherwise, hide header
-        projectHeader.classList.add('header-hidden');
+    const handleHeaderVisibility = () => {
+      const shouldHide = window.scrollY > 10;
+      if (shouldHide !== isHeaderHidden) {
+        isHeaderHidden = shouldHide;
+        projectHeader.classList.toggle('header-hidden', shouldHide);
       }
     };
 
-    // Run once on load/init
-    handleHeaderVisibility();
+    // Trigger initial left-to-right staggered reveal on the next frame if at the top
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        handleHeaderVisibility();
+      });
+    });
 
     window.addEventListener('scroll', handleHeaderVisibility, { passive: true });
   }
@@ -756,7 +952,18 @@ function changeGreeting() {
 // Initial setup
 if (greetingElement) {
   greetingElement.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-  setInterval(changeGreeting, 3500);
+  let isGreetingVisible = true;
+  if ('IntersectionObserver' in window) {
+    const greetingObserver = new IntersectionObserver((entries) => {
+      isGreetingVisible = entries[0].isIntersecting;
+    }, { threshold: 0.01 });
+    greetingObserver.observe(greetingElement);
+  }
+  setInterval(() => {
+    if (!document.hidden && isGreetingVisible) {
+      changeGreeting();
+    }
+  }, 3500);
 }
 
 // Simple scroll reveal animations for project cards
@@ -867,23 +1074,37 @@ function updateCursorTextMode(target) {
   }
 }
 
+let isResettingCursor = false;
+let lastCursorTarget = null;
+let cursorRafId = null;
+let pendingMouseX = 0;
+let pendingMouseY = 0;
+let pendingMouseTarget = null;
+
 window.addEventListener('mousemove', (e) => {
   lastMouseX = e.clientX;
   lastMouseY = e.clientY;
-  if (customCursor) {
+  pendingMouseX = e.clientX;
+  pendingMouseY = e.clientY;
+  pendingMouseTarget = e.target;
+
+  if (!customCursor || cursorRafId !== null) return;
+
+  cursorRafId = requestAnimationFrame(() => {
+    cursorRafId = null;
     if (!activeCard && customCursor.classList.contains('card-mode')) {
-      customCursor.classList.remove('card-mode');
-      customCursor.style.width = '32px';
-      customCursor.style.height = '32px';
-      customCursor.style.borderRadius = '50%';
+      resetActiveCard(null, pendingMouseX, pendingMouseY);
     }
 
     if (!customCursor.classList.contains('card-mode')) {
-      customCursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
-      updateCursorTextMode(e.target);
+      customCursor.style.transform = `translate3d(${pendingMouseX}px, ${pendingMouseY}px, 0) translate(-50%, -50%)`;
+      if (!isResettingCursor && pendingMouseTarget && pendingMouseTarget !== lastCursorTarget) {
+        lastCursorTarget = pendingMouseTarget;
+        updateCursorTextMode(pendingMouseTarget);
+      }
     }
-  }
-});
+  });
+}, { passive: true });
 
 // Helper to get inner elements that should receive subtle magnetic dragging effect
 function getInnerMagneticElements(card) {
@@ -894,6 +1115,11 @@ function getInnerMagneticElements(card) {
 
 // Helper to absorb custom cursor into card with physical scaling animation
 function absorbCursor(card, clientX, clientY) {
+  clearTimeout(cursorTransitionTimeout);
+  isResettingCursor = false;
+  if (activeCard && activeCard !== card) {
+    resetActiveCard(activeCard, clientX, clientY);
+  }
   activeCard = card;
   card.classList.add('is-absorbed');
 
@@ -904,16 +1130,31 @@ function absorbCursor(card, clientX, clientY) {
 
   const cardStyle = window.getComputedStyle(card);
   const borderRadius = cardStyle.borderRadius || '24px';
-  const computedBg = cardStyle.backgroundColor;
-  const targetBg = (computedBg && computedBg !== 'rgba(0, 0, 0, 0)' && computedBg !== 'transparent') ? computedBg : '#282833';
+  // Use card's custom absorbed bg if specified, otherwise solid #282833 (avoid un-absorbed translucent card background)
+  const targetBg = card.dataset.absorbedBg || '#282833';
 
   // Outer container stays strictly contained / locked in place
-  card.style.transition = 'transform 0.3s ease';
+  card.style.transition = 'transform 0.3s ease, background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1)';
   card.style.transform = 'translate(0px, 0px)';
 
   if (customCursor) {
     customCursor.classList.remove('text-mode');
-    customCursor.classList.add('card-mode');
+
+    // If customCursor is not in card-mode yet, initialize its position at exact entry point as 32px circle
+    if (!customCursor.classList.contains('card-mode')) {
+      const entryX = (clientX !== undefined && !isNaN(clientX)) ? clientX : centerX;
+      const entryY = (clientY !== undefined && !isNaN(clientY)) ? clientY : centerY;
+      customCursor.style.transition = 'none';
+      customCursor.style.width = '32px';
+      customCursor.style.height = '32px';
+      customCursor.style.borderRadius = '50%';
+      customCursor.style.transform = `translate(${entryX}px, ${entryY}px) translate(-50%, -50%)`;
+
+      // Force browser reflow to register starting state
+      void customCursor.offsetHeight;
+
+      customCursor.classList.add('card-mode');
+    }
 
     // Smoothly expand customCursor to match stationary card size, border radius, and center position
     customCursor.style.transition = `
@@ -931,8 +1172,8 @@ function absorbCursor(card, clientX, clientY) {
   }
 
   // Subtle dragging effect of inner text/icons ONLY
-  const xDist = clientX - centerX;
-  const yDist = clientY - centerY;
+  const xDist = ((clientX !== undefined && !isNaN(clientX)) ? clientX : centerX) - centerX;
+  const yDist = ((clientY !== undefined && !isNaN(clientY)) ? clientY : centerY) - centerY;
   const innerMoveX = xDist * 0.10;
   const innerMoveY = yDist * 0.10;
   const innerElements = getInnerMagneticElements(card);
@@ -949,27 +1190,60 @@ function resetActiveCard(card, clientX, clientY) {
     customCursor.classList.remove('explore-hover');
     customCursor.classList.remove('wish-btn-hover');
 
-    // Smoothly shrink customCursor back to 32px circle centered at exit mouse position
+    const exitX = (clientX !== undefined && !isNaN(clientX)) ? clientX : lastMouseX;
+    const exitY = (clientY !== undefined && !isNaN(clientY)) ? clientY : lastMouseY;
+
+    // Calculate natural starting detachment size based on hovered card/button dimensions
+    const cardRect = card ? card.getBoundingClientRect() : null;
+    const cardHeight = cardRect ? cardRect.height : 32;
+    const cardStyle = card ? window.getComputedStyle(card) : null;
+    const startRadius = cardStyle ? cardStyle.borderRadius : '50%';
+    const targetBg = (card && card.dataset.absorbedBg) ? card.dataset.absorbedBg : '#282833';
+
+    // Start size: cap at 44px so it never balloons or "scales large"
+    // For small buttons/pills, start nicely matching button height (e.g. ~36-44px)
+    const startSize = Math.max(32, Math.min(cardHeight, 44));
+
+    isResettingCursor = true;
+
+    // Instantly snap to exit coordinates as a neat droplet matching the button/card height with no transition delay
+    customCursor.style.transition = 'none';
+    customCursor.style.width = `${startSize}px`;
+    customCursor.style.height = `${startSize}px`;
+    customCursor.style.borderRadius = startRadius;
+    customCursor.style.backgroundColor = targetBg;
+    customCursor.style.transform = `translate(${exitX}px, ${exitY}px) translate(-50%, -50%)`;
+
+    // Force browser reflow to register starting state before animating
+    void customCursor.offsetHeight;
+
+    // Smoothly contract to standard 32px circle.
+    // Transform is deliberately excluded from transition here so subsequent mousemove events track with 100% fluid precision
     customCursor.style.transition = `
-      width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-      height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-      border-radius 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-      background-color 0.3s ease
+      width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+      height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+      border-radius 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 0.25s ease
     `;
     customCursor.style.width = '32px';
     customCursor.style.height = '32px';
     customCursor.style.borderRadius = '50%';
     customCursor.style.backgroundColor = '';
 
-    if (clientX !== undefined && clientY !== undefined) {
-      customCursor.style.transform = `translate(${clientX}px, ${clientY}px) translate(-50%, -50%)`;
-    }
+    clearTimeout(cursorTransitionTimeout);
+    cursorTransitionTimeout = setTimeout(() => {
+      isResettingCursor = false;
+      if (!activeCard && customCursor && !customCursor.classList.contains('card-mode')) {
+        customCursor.style.transition = '';
+      }
+    }, 280);
   }
 
   if (card) {
     card.classList.remove('is-absorbed');
-    card.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
+    const speakItem = card.closest('.speak-item');
+    if (speakItem) speakItem.classList.remove('is-absorbed');
+    card.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1)';
     card.style.transform = 'translate(0px, 0px)';
 
     const innerElements = getInnerMagneticElements(card);
@@ -984,161 +1258,121 @@ function initMagneticCard(card) {
   if (card._hasMagneticInit) return;
   card._hasMagneticInit = true;
 
-  let rect, centerX, centerY;
+  let rect = null;
+  let centerX = 0;
+  let centerY = 0;
+  let innerElements = null;
+  let cardMoveRafId = null;
+  let moveX = 0;
+  let moveY = 0;
+  const speakItem = card.closest('.speak-item');
 
   card.addEventListener('mouseenter', (e) => {
     absorbCursor(card, e.clientX, e.clientY);
+    if (speakItem) speakItem.classList.add('is-absorbed');
     rect = card.getBoundingClientRect();
     centerX = rect.left + rect.width / 2;
     centerY = rect.top + rect.height / 2;
+    innerElements = getInnerMagneticElements(card);
+    lastCursorTarget = null;
   });
 
   card.addEventListener('mousemove', (e) => {
-    if (activeCard !== card) return;
-    
-    rect = card.getBoundingClientRect();
-    centerX = rect.left + rect.width / 2;
-    centerY = rect.top + rect.height / 2;
+    if (activeCard !== card || !rect) return;
 
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
+    moveX = e.clientX;
+    moveY = e.clientY;
 
-    const xDist = mouseX - centerX;
-    const yDist = mouseY - centerY;
+    if (cardMoveRafId !== null) return;
+    cardMoveRafId = requestAnimationFrame(() => {
+      cardMoveRafId = null;
+      if (activeCard !== card || !rect) return;
 
-    card.style.transform = 'translate(0px, 0px)';
+      const xDist = Math.max(-rect.width, Math.min(rect.width, moveX - centerX));
+      const yDist = Math.max(-rect.height, Math.min(rect.height, moveY - centerY));
 
-    if (customCursor && customCursor.classList.contains('card-mode')) {
-      customCursor.style.transform = `translate(${centerX}px, ${centerY}px) translate(-50%, -50%)`;
-    }
-
-    const innerMoveX = xDist * 0.10;
-    const innerMoveY = yDist * 0.10;
-    const innerElements = getInnerMagneticElements(card);
-    innerElements.forEach(el => {
-      el.style.transform = `translate(${innerMoveX}px, ${innerMoveY}px)`;
+      const innerMoveX = xDist * 0.10;
+      const innerMoveY = yDist * 0.10;
+      if (innerElements) {
+        innerElements.forEach(el => {
+          el.style.transform = `translate3d(${innerMoveX.toFixed(2)}px, ${innerMoveY.toFixed(2)}px, 0)`;
+        });
+      }
     });
-  });
+  }, { passive: true });
 
   card.addEventListener('mouseleave', (e) => {
+    if (cardMoveRafId !== null) {
+      cancelAnimationFrame(cardMoveRafId);
+      cardMoveRafId = null;
+    }
     if (activeCard === card) {
       activeCard = null;
     }
-    resetActiveCard(card, e.clientX, e.clientY);
-  });
-}
-
-function initSpeakItem(speakItem) {
-  if (speakItem._hasMagneticInit) return;
-  speakItem._hasMagneticInit = true;
-
-  const card = speakItem.querySelector('.interaction-card.speak-card');
-  if (!card) return;
-
-  let rect, centerX, centerY;
-
-  speakItem.addEventListener('mouseenter', (e) => {
-    absorbCursor(card, e.clientX, e.clientY);
-    speakItem.classList.add('is-absorbed');
-    rect = card.getBoundingClientRect();
-    centerX = rect.left + rect.width / 2;
-    centerY = rect.top + rect.height / 2;
-  });
-
-  speakItem.addEventListener('mousemove', (e) => {
-    if (activeCard !== card) return;
-
-    rect = card.getBoundingClientRect();
-    centerX = rect.left + rect.width / 2;
-    centerY = rect.top + rect.height / 2;
-
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
-
-    // Clamp drag distance relative to card bounds so icon movement remains proportional
-    const xDist = Math.max(-rect.width, Math.min(rect.width, mouseX - centerX));
-    const yDist = Math.max(-rect.height, Math.min(rect.height, mouseY - centerY));
-
-    card.style.transform = 'translate(0px, 0px)';
-
-    if (customCursor && customCursor.classList.contains('card-mode')) {
-      customCursor.style.transform = `translate(${centerX}px, ${centerY}px) translate(-50%, -50%)`;
-    }
-
-    const innerMoveX = xDist * 0.10;
-    const innerMoveY = yDist * 0.10;
-    const innerElements = getInnerMagneticElements(card);
-    innerElements.forEach(el => {
-      el.style.transform = `translate(${innerMoveX}px, ${innerMoveY}px)`;
-    });
-  });
-
-  speakItem.addEventListener('mouseleave', (e) => {
-    if (activeCard === card) {
-      activeCard = null;
-    }
-    speakItem.classList.remove('is-absorbed');
+    lastCursorTarget = null;
+    if (speakItem) speakItem.classList.remove('is-absorbed');
     resetActiveCard(card, e.clientX, e.clientY);
   });
 }
 
 function initMagneticListeners(parent = document) {
-  parent.querySelectorAll('.interaction-card:not(.speak-card), .magnetic-link').forEach(initMagneticCard);
-  parent.querySelectorAll('.speak-item').forEach(initSpeakItem);
+  parent.querySelectorAll('.interaction-card, .magnetic-link').forEach(initMagneticCard);
 }
 
 // Initial setup
 initMagneticListeners(document);
 
 // Reset/Update cursor if page is scrolled while cursor is over cards
-let isScrollingCursorCheck = false;
+// Throttled so scrolling never forces synchronous elementFromPoint hit-tests every frame
+let scrollCursorTimer = null;
 window.addEventListener('scroll', () => {
-  if (isScrollingCursorCheck) return;
-  isScrollingCursorCheck = true;
-  requestAnimationFrame(() => {
-    isScrollingCursorCheck = false;
-    if (lastMouseX === undefined || lastMouseY === undefined) return;
-    const element = document.elementFromPoint(lastMouseX, lastMouseY);
-    const itemUnderMouse = element ? element.closest('.interaction-card, .magnetic-link, .speak-item') : null;
-    const cardUnderMouse = itemUnderMouse ? (itemUnderMouse.classList.contains('speak-item') ? itemUnderMouse.querySelector('.speak-card') : itemUnderMouse) : null;
-
-    if (cardUnderMouse) {
-      if (cardUnderMouse === activeCard) {
+  // If cursor is currently absorbed into a card, update its position immediately on next frame
+  if (activeCard) {
+    if (!scrollCursorTimer) {
+      scrollCursorTimer = setTimeout(() => {
+        scrollCursorTimer = null;
+        if (!activeCard) return;
         const rect = activeCard.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
+        const isStillInside =
+          lastMouseX >= rect.left &&
+          lastMouseX <= rect.right &&
+          lastMouseY >= rect.top &&
+          lastMouseY <= rect.bottom;
 
-        const xDist = lastMouseX - centerX;
-        const yDist = lastMouseY - centerY;
-
-        activeCard.style.transform = 'translate(0px, 0px)';
-
-        const innerMoveX = xDist * 0.10;
-        const innerMoveY = yDist * 0.10;
-        const innerElements = getInnerMagneticElements(activeCard);
-        innerElements.forEach(el => {
-          el.style.transform = `translate(${innerMoveX}px, ${innerMoveY}px)`;
-        });
-
-        if (customCursor) {
-          customCursor.style.transform = `translate(${centerX}px, ${centerY}px) translate(-50%, -50%)`;
-        }
-      } else {
-        const oldCard = activeCard;
-        activeCard = null;
-        if (oldCard) {
+        if (isStillInside) {
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          const innerMoveX = (lastMouseX - centerX) * 0.10;
+          const innerMoveY = (lastMouseY - centerY) * 0.10;
+          const innerElements = getInnerMagneticElements(activeCard);
+          innerElements.forEach(el => {
+            el.style.transform = `translate3d(${innerMoveX.toFixed(2)}px, ${innerMoveY.toFixed(2)}px, 0)`;
+          });
+          if (customCursor) {
+            customCursor.style.transform = `translate3d(${centerX}px, ${centerY}px, 0) translate(-50%, -50%)`;
+          }
+        } else {
+          const oldCard = activeCard;
+          activeCard = null;
+          lastCursorTarget = null;
           resetActiveCard(oldCard, lastMouseX, lastMouseY);
         }
-        absorbCursor(cardUnderMouse, lastMouseX, lastMouseY);
-      }
-    } else {
-      if (activeCard) {
-        const oldCard = activeCard;
-        activeCard = null;
-        resetActiveCard(oldCard, lastMouseX, lastMouseY);
-      }
+      }, 60);
     }
-  });
+    return;
+  }
+
+  // When not over a card, only check elementFromPoint after scrolling pauses briefly (avoids per-frame forced layout)
+  if (scrollCursorTimer) clearTimeout(scrollCursorTimer);
+  scrollCursorTimer = setTimeout(() => {
+    scrollCursorTimer = null;
+    if (lastMouseX === 0 && lastMouseY === 0) return;
+    const element = document.elementFromPoint(lastMouseX, lastMouseY);
+    const cardUnderMouse = element ? element.closest('.interaction-card, .magnetic-link') : null;
+    if (cardUnderMouse && cardUnderMouse !== activeCard) {
+      absorbCursor(cardUnderMouse, lastMouseX, lastMouseY);
+    }
+  }, 100);
 }, { passive: true });
 
 // Message Session Logic
@@ -1456,4 +1690,130 @@ if (exploreBtn) {
     }
   });
 }
+
+// Footer Staggered Reveal Animation Controller
+// Reveals elements from left to right (home icon -> social links -> "made in The Philippines")
+// On project pages, consistently replays the staggered reveal whenever reaching the bottom.
+// On index.html, persists across reloads via localStorage until cache / storage is cleared or hard refresh.
+function initFooterReveal() {
+  const footer = document.querySelector('.site-footer');
+  if (!footer) return;
+
+  const isProjectPage = document.body.classList.contains('project-page');
+
+  if (isProjectPage) {
+    // Consistent left-to-right reveal every time the user reaches the bottom of any project page
+    footer.classList.remove('footer-persisted', 'footer-revealing');
+    footer.classList.add('footer-waiting-reveal');
+
+    let isFooterVisible = false;
+
+    const setFooterRevealed = (visible) => {
+      if (visible === isFooterVisible) return;
+      isFooterVisible = visible;
+      if (visible) {
+        footer.classList.remove('footer-waiting-reveal');
+        footer.classList.add('footer-revealing');
+      } else {
+        footer.classList.remove('footer-revealing');
+        footer.classList.add('footer-waiting-reveal');
+      }
+    };
+
+    if ('IntersectionObserver' in window) {
+      const footerObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          setFooterRevealed(entry.isIntersecting);
+        });
+      }, {
+        root: null,
+        rootMargin: '0px 0px -10px 0px',
+        threshold: 0.05
+      });
+      footerObserver.observe(footer);
+    } else {
+      setFooterRevealed(true);
+    }
+    return;
+  }
+
+  let hasBeenRevealed = false;
+  try {
+    hasBeenRevealed = localStorage.getItem('footer_revealed') === 'true';
+  } catch (err) {}
+
+  if (hasBeenRevealed && !isHardRefresh) {
+    document.documentElement.classList.add('footer-already-revealed');
+    footer.classList.add('footer-persisted');
+    return;
+  }
+
+  // Not yet revealed: prepare staggered reveal on reaching bottom
+  footer.classList.remove('footer-persisted');
+  footer.classList.add('footer-waiting-reveal');
+
+  let revealed = false;
+  const triggerReveal = () => {
+    if (revealed) return;
+    revealed = true;
+    footer.classList.add('footer-revealing');
+    try {
+      localStorage.setItem('footer_revealed', 'true');
+    } catch (err) {}
+    document.documentElement.classList.add('footer-already-revealed');
+
+    setTimeout(() => {
+      footer.classList.remove('footer-waiting-reveal');
+      footer.classList.remove('footer-revealing');
+      footer.classList.add('footer-persisted');
+    }, 1200);
+  };
+
+  // IntersectionObserver for bottom detection
+  let observer = null;
+  if ('IntersectionObserver' in window) {
+    observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          triggerReveal();
+          if (observer) {
+            observer.disconnect();
+            observer = null;
+          }
+        }
+      });
+    }, {
+      root: null,
+      rootMargin: '0px 0px -10px 0px',
+      threshold: 0.1
+    });
+    observer.observe(footer);
+  }
+
+  // Complementary scroll proximity check
+  const onScrollCheck = () => {
+    if (revealed) {
+      window.removeEventListener('scroll', onScrollCheck);
+      return;
+    }
+    const scrollY = window.scrollY || window.pageYOffset;
+    const viewportHeight = window.innerHeight;
+    const fullHeight = document.documentElement.scrollHeight;
+    if (scrollY + viewportHeight >= fullHeight - 160) {
+      triggerReveal();
+      if (observer) {
+        observer.disconnect();
+        observer = null;
+      }
+      window.removeEventListener('scroll', onScrollCheck);
+    }
+  };
+
+  window.addEventListener('scroll', onScrollCheck, { passive: true });
+  // Check once immediately in case page is loaded near bottom
+  onScrollCheck();
+}
+
+initFooterReveal();
+
 

@@ -9,7 +9,7 @@ import grad from './item_8_and-vch-identity.js';
 import voice from './item_9_voice-assistant.js';
 import g from './item_10_geometry-g.js';
 import ambient from './item_11_ambient-gradient.js';
-import yellow from './item_12_yellow-box.js';
+import buildNaturally from './item_12_build-naturally.js';
 import m from './item_13_outline-m.js';
 import graphicLayout23 from './item_14_graphic-layout-23.js';
 import green from './item_16_green-aurora.js';
@@ -30,7 +30,7 @@ export const projects = [
   voice,
   g,
   ambient,
-  yellow,
+  buildNaturally,
   m,
   graphicLayout23,
   green,
