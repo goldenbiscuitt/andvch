@@ -331,35 +331,125 @@ export default {
       <div class="p-details-box full-width-box">
         <h3>Tech Stack & Skills</h3>
         
-        <div class="about-grid-3col">
-          <div class="stack-category-card">
-            <h4 class="cat-title">AI & Machine Learning</h4>
-            <ul class="stack-list">
-              <li><span class="stack-bullet">•</span> Google Gemini API & Firebase AI</li>
-              <li><span class="stack-bullet">•</span> AI Literacy & Training (AI Ready ASEAN)</li>
-              <li><span class="stack-bullet">•</span> Python & Data Analysis</li>
-              <li><span class="stack-bullet">•</span> RAG & Vector Search</li>
-            </ul>
+        <div class="stack-landscape-container">
+          <!-- Card 1: AI & Machine Learning -->
+          <div class="stack-landscape-card">
+            <div class="stack-card-left">
+              <div class="stack-card-meta">
+                <span class="stack-index">01</span>
+                <span class="stack-index-divider">/</span>
+                <span class="stack-domain-tag">INTELLIGENCE</span>
+              </div>
+              <h4 class="cat-title">AI & Machine Learning</h4>
+              <div class="pill-group stack-pills-row">
+                <span class="tech-pill">Gemini API</span>
+                <span class="tech-pill">Firebase AI</span>
+                <span class="tech-pill">Python</span>
+                <span class="tech-pill">RAG</span>
+                <span class="tech-pill">Vector Search</span>
+              </div>
+            </div>
+
+            <div class="stack-card-right">
+              <ul class="stack-list">
+                <li class="stack-item">
+                  <span class="stack-dash">—</span>
+                  <span class="stack-text">Google Gemini API & Firebase AI</span>
+                </li>
+                <li class="stack-item">
+                  <span class="stack-dash">—</span>
+                  <span class="stack-text">AI Literacy & Training (AI Ready ASEAN)</span>
+                </li>
+                <li class="stack-item">
+                  <span class="stack-dash">—</span>
+                  <span class="stack-text">Python & Data Analysis</span>
+                </li>
+                <li class="stack-item">
+                  <span class="stack-dash">—</span>
+                  <span class="stack-text">RAG & Vector Search</span>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          <div class="stack-category-card">
-            <h4 class="cat-title">Systems & Infrastructure</h4>
-            <ul class="stack-list">
-              <li><span class="stack-bullet">•</span> Server Administration (Linux/Windows)</li>
-              <li><span class="stack-bullet">•</span> Network Routing, Switching & Firewalls</li>
-              <li><span class="stack-bullet">•</span> Broadcast Operations & Signal Routing</li>
-              <li><span class="stack-bullet">•</span> Disaster Recovery & Systems Security</li>
-            </ul>
+          <!-- Card 2: Systems & Infrastructure -->
+          <div class="stack-landscape-card">
+            <div class="stack-card-left">
+              <div class="stack-card-meta">
+                <span class="stack-index">02</span>
+                <span class="stack-index-divider">/</span>
+                <span class="stack-domain-tag">INFRASTRUCTURE</span>
+              </div>
+              <h4 class="cat-title">Systems & Infrastructure</h4>
+              <div class="pill-group stack-pills-row">
+                <span class="tech-pill">Linux / Windows</span>
+                <span class="tech-pill">Firewalls</span>
+                <span class="tech-pill">Routing & Switching</span>
+                <span class="tech-pill">Broadcast Routing</span>
+                <span class="tech-pill">Disaster Recovery</span>
+              </div>
+            </div>
+
+            <div class="stack-card-right">
+              <ul class="stack-list">
+                <li class="stack-item">
+                  <span class="stack-dash">—</span>
+                  <span class="stack-text">Server Administration (Linux/Windows)</span>
+                </li>
+                <li class="stack-item">
+                  <span class="stack-dash">—</span>
+                  <span class="stack-text">Network Routing, Switching & Firewalls</span>
+                </li>
+                <li class="stack-item">
+                  <span class="stack-dash">—</span>
+                  <span class="stack-text">Broadcast Operations & Signal Routing</span>
+                </li>
+                <li class="stack-item">
+                  <span class="stack-dash">—</span>
+                  <span class="stack-text">Disaster Recovery & Systems Security</span>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          <div class="stack-category-card">
-            <h4 class="cat-title">Full-Stack & Automation</h4>
-            <ul class="stack-list">
-              <li><span class="stack-bullet">•</span> JavaScript (ES6+ / Modern Web Apps)</li>
-              <li><span class="stack-bullet">•</span> HTML5 / Custom CSS / Animations</li>
-              <li><span class="stack-bullet">•</span> Workflow Automation Apps</li>
-              <li><span class="stack-bullet">•</span> Project Management (Agile)</li>
-            </ul>
+          <!-- Card 3: Full-Stack & Automation -->
+          <div class="stack-landscape-card">
+            <div class="stack-card-left">
+              <div class="stack-card-meta">
+                <span class="stack-index">03</span>
+                <span class="stack-index-divider">/</span>
+                <span class="stack-domain-tag">APPLICATIONS</span>
+              </div>
+              <h4 class="cat-title">Full-Stack & Automation</h4>
+              <div class="pill-group stack-pills-row">
+                <span class="tech-pill">JavaScript ES6+</span>
+                <span class="tech-pill">HTML5 / CSS3</span>
+                <span class="tech-pill">Workflow Apps</span>
+                <span class="tech-pill">Agile PM</span>
+                <span class="tech-pill">REST APIs</span>
+              </div>
+            </div>
+
+            <div class="stack-card-right">
+              <ul class="stack-list">
+                <li class="stack-item">
+                  <span class="stack-dash">—</span>
+                  <span class="stack-text">JavaScript (ES6+ / Modern Web Apps)</span>
+                </li>
+                <li class="stack-item">
+                  <span class="stack-dash">—</span>
+                  <span class="stack-text">HTML5 / Custom CSS / Animations</span>
+                </li>
+                <li class="stack-item">
+                  <span class="stack-dash">—</span>
+                  <span class="stack-text">Workflow Automation Apps</span>
+                </li>
+                <li class="stack-item">
+                  <span class="stack-dash">—</span>
+                  <span class="stack-text">Project Management (Agile)</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -373,86 +463,129 @@ export default {
         <!-- Group 1: Artificial Intelligence -->
         <div class="cert-category-group">
           <div class="cert-group-header">
-            <span class="cert-group-sublabel">Artificial Intelligence</span>
+            <div class="cert-group-header-left">
+              <span class="cert-group-index">01</span>
+              <span class="cert-group-divider">/</span>
+              <span class="cert-group-sublabel">Artificial Intelligence</span>
+            </div>
+            <span class="cert-group-count">4 Credentials</span>
           </div>
-          <div class="about-grid-3col">
+          <div class="about-grid-2col">
             <div class="cert-card">
-              <div class="cert-header-group">
-                <img src="assets/img/google-logo.png" alt="Google" class="cert-company-logo" />
-                <div class="cert-main-info">
+              <div class="cert-left-content">
+                <div class="cert-logo-box">
+                  <img src="assets/img/google-logo.png" alt="Google" class="cert-company-logo" />
+                </div>
+                <div class="cert-info">
                   <h4 class="cert-title">Google AI Professional</h4>
-                  <span class="cert-issuer-name">Google</span>
+                  <div class="cert-meta-row">
+                    <span class="cert-issuer-name">Google</span>
+                    <span class="cert-meta-sep">•</span>
+                    <span class="cert-issued-date">Issued Jun 2026</span>
+                  </div>
                 </div>
               </div>
-              <div class="cert-footer-group">
-                <span class="cert-issued-date">Issued Jun 2026</span>
-                <a href="https://www.coursera.org/account/accomplishments/specialization/4GGLTMDPLXA6" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link">
-                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="7" y1="17" x2="17" y2="7"></line>
-                    <polyline points="7 7 17 7 17 17"></polyline>
-                  </svg>
+              <div class="cert-right-action">
+                <div class="cert-verify-wrapper">
+                  <a href="https://www.coursera.org/account/accomplishments/specialization/4GGLTMDPLXA6" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link" data-absorbed-bg="#ff4d00" aria-label="Verify credential">
+                    <span class="btn-bg"></span>
+                    <span class="btn-content">
+                      <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="miter">
+                        <line x1="6" y1="18" x2="18" y2="6"></line>
+                        <polyline points="11 6 18 6 18 13"></polyline>
+                      </svg>
+                    </span>
+                  </a>
                   <span class="cert-tooltip">Verify</span>
-                </a>
+                </div>
               </div>
             </div>
 
             <div class="cert-card">
-              <div class="cert-header-group">
-                <img src="assets/img/google-logo.png" alt="Google" class="cert-company-logo" />
-                <div class="cert-main-info">
+              <div class="cert-left-content">
+                <div class="cert-logo-box">
+                  <img src="assets/img/google-logo.png" alt="Google" class="cert-company-logo" />
+                </div>
+                <div class="cert-info">
                   <h4 class="cert-title">Gemini Certified University Student</h4>
-                  <span class="cert-issuer-name">Google</span>
+                  <div class="cert-meta-row">
+                    <span class="cert-issuer-name">Google</span>
+                    <span class="cert-meta-sep">•</span>
+                    <span class="cert-issued-date">Issued Oct 2025 · Expires Oct 2028</span>
+                  </div>
                 </div>
               </div>
-              <div class="cert-footer-group">
-                <span class="cert-issued-date">Issued Oct 2025 · Expires Oct 2028</span>
-                <a href="https://edu.google.accredible.com/d750fc05-8e13-43fb-85d8-971972d0ad6d#acc.mvKWkVJl" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link">
-                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="7" y1="17" x2="17" y2="7"></line>
-                    <polyline points="7 7 17 7 17 17"></polyline>
-                  </svg>
+              <div class="cert-right-action">
+                <div class="cert-verify-wrapper">
+                  <a href="https://edu.google.accredible.com/d750fc05-8e13-43fb-85d8-971972d0ad6d#acc.mvKWkVJl" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link" data-absorbed-bg="#ff4d00" aria-label="Verify credential">
+                    <span class="btn-bg"></span>
+                    <span class="btn-content">
+                      <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="miter">
+                        <line x1="6" y1="18" x2="18" y2="6"></line>
+                        <polyline points="11 6 18 6 18 13"></polyline>
+                      </svg>
+                    </span>
+                  </a>
                   <span class="cert-tooltip">Verify</span>
-                </a>
+                </div>
               </div>
             </div>
 
             <div class="cert-card">
-              <div class="cert-header-group">
-                <img src="assets/img/google-logo.png" alt="Google" class="cert-company-logo" />
-                <div class="cert-main-info">
-                  <h4 class="cert-title">Generative AI for Educators with Gemini Certificate</h4>
-                  <span class="cert-issuer-name">Google</span>
+              <div class="cert-left-content">
+                <div class="cert-logo-box">
+                  <img src="assets/img/google-logo.png" alt="Google" class="cert-company-logo" />
+                </div>
+                <div class="cert-info">
+                  <h4 class="cert-title">Generative AI for Educators with Gemini</h4>
+                  <div class="cert-meta-row">
+                    <span class="cert-issuer-name">Google</span>
+                    <span class="cert-meta-sep">•</span>
+                    <span class="cert-issued-date">Issued Oct 2025</span>
+                  </div>
                 </div>
               </div>
-              <div class="cert-footer-group">
-                <span class="cert-issued-date">Issued Oct 2025</span>
-                <a href="https://edu.exceedlms.com/student/award/kJuEUoumq6rheCNjJLfKXVHK" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link">
-                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="7" y1="17" x2="17" y2="7"></line>
-                    <polyline points="7 7 17 7 17 17"></polyline>
-                  </svg>
+              <div class="cert-right-action">
+                <div class="cert-verify-wrapper">
+                  <a href="https://edu.exceedlms.com/student/award/kJuEUoumq6rheCNjJLfKXVHK" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link" data-absorbed-bg="#ff4d00" aria-label="Verify credential">
+                    <span class="btn-bg"></span>
+                    <span class="btn-content">
+                      <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="miter">
+                        <line x1="6" y1="18" x2="18" y2="6"></line>
+                        <polyline points="11 6 18 6 18 13"></polyline>
+                      </svg>
+                    </span>
+                  </a>
                   <span class="cert-tooltip">Verify</span>
-                </a>
+                </div>
               </div>
             </div>
 
             <div class="cert-card">
-              <div class="cert-header-group">
-                <div class="cert-logo-avatar">VJ</div>
-                <div class="cert-main-info">
-                  <h4 class="cert-title">The Artificial Intelligence for Communities Workshop</h4>
-                  <span class="cert-issuer-name">Vjal Institute</span>
+              <div class="cert-left-content">
+                <div class="cert-logo-box cert-logo-avatar">VJ</div>
+                <div class="cert-info">
+                  <h4 class="cert-title">The AI for Communities Workshop</h4>
+                  <div class="cert-meta-row">
+                    <span class="cert-issuer-name">Vjal Institute</span>
+                    <span class="cert-meta-sep">•</span>
+                    <span class="cert-issued-date">Issued Aug 2025</span>
+                  </div>
                 </div>
               </div>
-              <div class="cert-footer-group">
-                <span class="cert-issued-date">Issued Aug 2025</span>
-                <a href="https://cert.vjal.ai/certificate/?uid=6304580921322988920" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link">
-                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="7" y1="17" x2="17" y2="7"></line>
-                    <polyline points="7 7 17 7 17 17"></polyline>
-                  </svg>
+              <div class="cert-right-action">
+                <div class="cert-verify-wrapper">
+                  <a href="https://cert.vjal.ai/certificate/?uid=6304580921322988920" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link" data-absorbed-bg="#ff4d00" aria-label="Verify credential">
+                    <span class="btn-bg"></span>
+                    <span class="btn-content">
+                      <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="miter">
+                        <line x1="6" y1="18" x2="18" y2="6"></line>
+                        <polyline points="11 6 18 6 18 13"></polyline>
+                      </svg>
+                    </span>
+                  </a>
                   <span class="cert-tooltip">Verify</span>
-                </a>
+                </div>
               </div>
             </div>
           </div>
@@ -461,46 +594,67 @@ export default {
         <!-- Group 2: AI & Security -->
         <div class="cert-category-group">
           <div class="cert-group-header">
-            <span class="cert-group-sublabel">AI & Security</span>
+            <div class="cert-group-header-left">
+              <span class="cert-group-index">02</span>
+              <span class="cert-group-divider">/</span>
+              <span class="cert-group-sublabel">AI & Security</span>
+            </div>
+            <span class="cert-group-count">2 Credentials</span>
           </div>
-          <div class="about-grid-3col">
+          <div class="about-grid-2col">
             <div class="cert-card">
-              <div class="cert-header-group">
-                <div class="cert-logo-avatar">JH</div>
-                <div class="cert-main-info">
+              <div class="cert-left-content">
+                <div class="cert-logo-box cert-logo-avatar">JH</div>
+                <div class="cert-info">
                   <h4 class="cert-title">Introduction to AI for Cybersecurity</h4>
-                  <span class="cert-issuer-name">The Johns Hopkins University</span>
+                  <div class="cert-meta-row">
+                    <span class="cert-issuer-name">Johns Hopkins University</span>
+                    <span class="cert-meta-sep">•</span>
+                    <span class="cert-issued-date">Issued Feb 2026</span>
+                  </div>
                 </div>
               </div>
-              <div class="cert-footer-group">
-                <span class="cert-issued-date">Issued Feb 2026</span>
-                <a href="https://www.coursera.org/account/accomplishments/verify/PK1V3DOUXCYR" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link">
-                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="7" y1="17" x2="17" y2="7"></line>
-                    <polyline points="7 7 17 7 17 17"></polyline>
-                  </svg>
+              <div class="cert-right-action">
+                <div class="cert-verify-wrapper">
+                  <a href="https://www.coursera.org/account/accomplishments/verify/PK1V3DOUXCYR" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link" data-absorbed-bg="#ff4d00" aria-label="Verify credential">
+                    <span class="btn-bg"></span>
+                    <span class="btn-content">
+                      <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="miter">
+                        <line x1="6" y1="18" x2="18" y2="6"></line>
+                        <polyline points="11 6 18 6 18 13"></polyline>
+                      </svg>
+                    </span>
+                  </a>
                   <span class="cert-tooltip">Verify</span>
-                </a>
+                </div>
               </div>
             </div>
 
             <div class="cert-card">
-              <div class="cert-header-group">
-                <div class="cert-logo-avatar">JH</div>
-                <div class="cert-main-info">
-                  <h4 class="cert-title">Advanced Malware and Network Anomaly Detection</h4>
-                  <span class="cert-issuer-name">The Johns Hopkins University</span>
+              <div class="cert-left-content">
+                <div class="cert-logo-box cert-logo-avatar">JH</div>
+                <div class="cert-info">
+                  <h4 class="cert-title">Advanced Malware & Network Anomaly Detection</h4>
+                  <div class="cert-meta-row">
+                    <span class="cert-issuer-name">Johns Hopkins University</span>
+                    <span class="cert-meta-sep">•</span>
+                    <span class="cert-issued-date">Issued Feb 2026</span>
+                  </div>
                 </div>
               </div>
-              <div class="cert-footer-group">
-                <span class="cert-issued-date">Issued Feb 2026</span>
-                <a href="https://www.coursera.org/account/accomplishments/verify/XW9RRTXTVDA2" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link">
-                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="7" y1="17" x2="17" y2="7"></line>
-                    <polyline points="7 7 17 7 17 17"></polyline>
-                  </svg>
+              <div class="cert-right-action">
+                <div class="cert-verify-wrapper">
+                  <a href="https://www.coursera.org/account/accomplishments/verify/XW9RRTXTVDA2" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link" data-absorbed-bg="#ff4d00" aria-label="Verify credential">
+                    <span class="btn-bg"></span>
+                    <span class="btn-content">
+                      <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="miter">
+                        <line x1="6" y1="18" x2="18" y2="6"></line>
+                        <polyline points="11 6 18 6 18 13"></polyline>
+                      </svg>
+                    </span>
+                  </a>
                   <span class="cert-tooltip">Verify</span>
-                </a>
+                </div>
               </div>
             </div>
           </div>
@@ -509,39 +663,58 @@ export default {
         <!-- Group 3: Cybersecurity -->
         <div class="cert-category-group">
           <div class="cert-group-header">
-            <span class="cert-group-sublabel">Cybersecurity</span>
+            <div class="cert-group-header-left">
+              <span class="cert-group-index">03</span>
+              <span class="cert-group-divider">/</span>
+              <span class="cert-group-sublabel">Cybersecurity</span>
+            </div>
+            <span class="cert-group-count">2 Credentials</span>
           </div>
-          <div class="about-grid-3col">
+          <div class="about-grid-2col">
             <div class="cert-card">
-              <div class="cert-header-group">
-                <img src="assets/img/google-logo.png" alt="Google" class="cert-company-logo" />
-                <div class="cert-main-info">
+              <div class="cert-left-content">
+                <div class="cert-logo-box">
+                  <img src="assets/img/google-logo.png" alt="Google" class="cert-company-logo" />
+                </div>
+                <div class="cert-info">
                   <h4 class="cert-title">Foundations of Cybersecurity</h4>
-                  <span class="cert-issuer-name">Google</span>
+                  <div class="cert-meta-row">
+                    <span class="cert-issuer-name">Google</span>
+                    <span class="cert-meta-sep">•</span>
+                    <span class="cert-issued-date">Issued Feb 2026</span>
+                  </div>
                 </div>
               </div>
-              <div class="cert-footer-group">
-                <span class="cert-issued-date">Issued Feb 2026</span>
-                <a href="https://www.coursera.org/account/accomplishments/specialization/KUM9MPA9841S" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link">
-                  <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="7" y1="17" x2="17" y2="7"></line>
-                    <polyline points="7 7 17 7 17 17"></polyline>
-                  </svg>
+              <div class="cert-right-action">
+                <div class="cert-verify-wrapper">
+                  <a href="https://www.coursera.org/account/accomplishments/specialization/KUM9MPA9841S" target="_blank" rel="noopener noreferrer" class="cert-verify-circle magnetic-link" data-absorbed-bg="#ff4d00" aria-label="Verify credential">
+                    <span class="btn-bg"></span>
+                    <span class="btn-content">
+                      <svg viewBox="0 0 24 24" class="verify-arrow-svg" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="butt" stroke-linejoin="miter">
+                        <line x1="6" y1="18" x2="18" y2="6"></line>
+                        <polyline points="11 6 18 6 18 13"></polyline>
+                      </svg>
+                    </span>
+                  </a>
                   <span class="cert-tooltip">Verify</span>
-                </a>
+                </div>
               </div>
             </div>
 
             <div class="cert-card">
-              <div class="cert-header-group">
-                <div class="cert-logo-avatar">DI</div>
-                <div class="cert-main-info">
-                  <h4 class="cert-title">Social Engineering Attacks & CPIT Webinar Series</h4>
-                  <span class="cert-issuer-name">DICT Philippines</span>
+              <div class="cert-left-content">
+                <div class="cert-logo-box cert-logo-avatar">DI</div>
+                <div class="cert-info">
+                  <h4 class="cert-title">Social Engineering Attacks & CPIT Webinar</h4>
+                  <div class="cert-meta-row">
+                    <span class="cert-issuer-name">DICT Philippines</span>
+                    <span class="cert-meta-sep">•</span>
+                    <span class="cert-issued-date">Issued Nov 2024</span>
+                  </div>
                 </div>
               </div>
-              <div class="cert-footer-group">
-                <span class="cert-issued-date">Issued Nov 2024</span>
+              <div class="cert-right-action">
+                <span class="cert-badge-status">Webinar Series</span>
               </div>
             </div>
           </div>

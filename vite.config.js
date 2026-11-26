@@ -25,15 +25,15 @@ function copyAssetsPlugin() {
   return {
     name: 'copy-assets-plugin',
     closeBundle() {
-      const src = resolve(__dirname, 'assets/img')
-      const dest = resolve(__dirname, 'dist/assets/img')
+      const src = resolve(import.meta.dirname, 'assets/img')
+      const dest = resolve(import.meta.dirname, 'dist/assets/img')
       if (fs.existsSync(src)) {
         copyDir(src, dest)
       }
       
       // Copy .nojekyll to dist root
-      const nojekyllSrc = resolve(__dirname, '.nojekyll')
-      const nojekyllDest = resolve(__dirname, 'dist/.nojekyll')
+      const nojekyllSrc = resolve(import.meta.dirname, '.nojekyll')
+      const nojekyllDest = resolve(import.meta.dirname, 'dist/.nojekyll')
       if (fs.existsSync(nojekyllSrc)) {
         fs.copyFileSync(nojekyllSrc, nojekyllDest)
       }
@@ -49,8 +49,8 @@ export default defineConfig({
     cssMinify: 'esbuild', // Prevent Lightning CSS from stripping unprefixed backdrop-filter properties
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
-        project: resolve(__dirname, 'project.html')
+        main: resolve(import.meta.dirname, 'index.html'),
+        project: resolve(import.meta.dirname, 'project.html')
       }
     }
   }

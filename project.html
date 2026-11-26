@@ -32,13 +32,49 @@
         align-items: center;
         z-index: 100;
         font-family: var(--font-mono);
-        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, max-width 0.3s ease;
+        transition: max-width 0.3s ease;
       }
 
       .project-header.header-hidden {
-        transform: translate(-50%, -100%);
-        opacity: 0;
         pointer-events: none;
+      }
+
+      /* Consistent Left-to-Right Staggered Reveal for Project Header (matches Footer) */
+      .project-header .header-left .logo-link,
+      .project-header .header-right > * {
+        transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .project-header.header-hidden .header-left .logo-link,
+      .project-header.header-hidden .header-right > * {
+        opacity: 0 !important;
+        transform: translateY(14px) !important;
+        pointer-events: none !important;
+        transition: opacity 0.28s ease, transform 0.28s ease;
+        transition-delay: 0s !important;
+      }
+
+      .project-header:not(.header-hidden) .header-left .logo-link {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.05s;
+      }
+
+      .project-header:not(.header-hidden) .header-right > *:nth-child(1) {
+        opacity: 0.6;
+        transform: translateY(0);
+        transition-delay: 0.16s;
+      }
+
+      .project-header:not(.header-hidden) .header-right > *:nth-child(2) {
+        opacity: 0.6;
+        transform: translateY(0);
+        transition-delay: 0.27s;
+      }
+
+      .project-header:not(.header-hidden) .nav-link:hover {
+        opacity: 1;
+        transition-delay: 0s;
       }
 
       @media (max-width: 1200px) {
@@ -94,6 +130,10 @@
         scroll-behavior: smooth;
       }
 
+      html.has-smooth-scroll {
+        scroll-behavior: auto !important;
+      }
+
       .project-main {
         margin-top: 25vh;
         padding-bottom: 10vh;
@@ -106,17 +146,23 @@
 
       .project-title {
         font-family: var(--font-mono);
-        font-size: clamp(2.5rem, 6vw, 5rem);
-        margin-bottom: 2rem;
-        letter-spacing: -3px;
+        font-size: clamp(2.5rem, 5.5vw, 4.75rem);
+        line-height: 1.08;
+        margin-bottom: 1.75rem;
+        letter-spacing: -0.045em;
         color: white;
+        text-wrap: balance;
       }
 
       .project-description {
         font-family: var(--font-sans);
-        font-size: 28px;
-        line-height: 1.6;
-        color: var(--text-primary);
+        font-size: clamp(1.15rem, 1.65vw, 1.5rem);
+        font-weight: 300;
+        line-height: 1.65;
+        letter-spacing: -0.01em;
+        color: rgba(255, 255, 255, 0.8);
+        max-width: 58ch;
+        text-wrap: pretty;
       }
 
       .project-visual {
@@ -171,8 +217,9 @@
         max-width: 100% !important;
       }
 
-      /* Prevent first-child full-width breakout for Wish mocks */
-      #project-visuals-container .p-vis-wish-mocks {
+      /* Prevent first-child full-width breakout for Wish mocks & Build Naturally uniform gallery */
+      #project-visuals-container .p-vis-wish-mocks,
+      #project-visuals-container .p-vis-bn-1 {
         width: 100% !important;
         max-width: 100% !important;
         margin-left: 0 !important;
@@ -182,10 +229,18 @@
         position: relative !important;
         justify-content: center !important;
       }
+
+      /* MacBook 3D Scroll Track on Directory App */
+      #project-visuals-container .p-vis-directory-1.macbook-scroll-track {
+        height: 240vh !important;
+        min-height: 240vh !important;
+        overflow: visible !important;
+        display: block !important;
+      }
     </style>
   </head>
 
-  <body>
+  <body class="project-page">
     <!-- Vertical Background Grid Lines -->
     <div class="grid-lines" aria-hidden="true">
       <div class="grid-col"><div class="line"></div><div class="line"></div></div>
@@ -215,7 +270,7 @@
       </div>
     </header>
 
-    <main class="project-main">
+    <main class="project-main" id="hero">
       <div class="container">
         <div class="project-info">
           <h1 class="project-title" id="project-title">Future Narratives</h1>
@@ -231,9 +286,9 @@
       </div>
     </main>
 
-    <footer class="site-footer">
+    <footer class="site-footer" id="last-section">
       <div class="footer-left-group">
-        <a href="#" class="back-to-top say-hi-btn social-link magnetic-link" aria-label="Back to top">
+        <a href="#hero" class="back-to-top say-hi-btn social-link magnetic-link" aria-label="Back to top">
           <span class="btn-bg"></span>
           <span class="btn-content">
             <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"
